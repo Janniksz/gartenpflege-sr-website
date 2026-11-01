@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Karussell from '../components/Karussell.astro';
 import { firma, leistungen } from '../data/firma';
-import { gartenkalender } from '../data/gartenkalender';
+import { gartenkalender, saisonHinweise } from '../data/gartenkalender';
 import garten from '../assets/fotos/garten.jpg';
 import foto from '../assets/fotos/robin-stocker.jpg';
 
@@ -34,14 +34,15 @@ const buildMonat = new Date().getMonth() + 1;
     <section class="hero">
       <div class="hero-text">
         <p class="eyebrow">Gartenpflege in {firma.gebiet}</p>
-        <h1 class="h1">Gepflegt bis ins Detail.</h1>
+        <h1 class="h1">Gepflegt bis ins <span class="strich">Detail.<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 13C40 6 92 4 197 9" pathLength="1" /></svg></span></h1>
         <p class="lead">Sie genießen Ihren Garten – ich kümmere mich um den Rest.</p>
-        <div class="tags">
-          <span>Rasen</span><span class="dot" aria-hidden="true"></span>
-          <span>Hecken</span><span class="dot" aria-hidden="true"></span>
-          <span>Laub</span><span class="dot" aria-hidden="true"></span>
-          <span>Beete</span>
-        </div>
+        {saisonHinweise.map((s) => (
+          <a class="saison-hinweis" href="/gartenkalender" data-saison={s.monate.join(' ')} hidden={!s.monate.includes(buildMonat)}>
+            <span class="saison-punkt" aria-hidden="true"></span>
+            {s.text}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </a>
+        ))}
         <div class="actions" style="margin-top: var(--space-2)">
           <a class="btn btn--primary" href="#kontakt">Unverbindlich anfragen</a>
           <a class="btn btn--secondary" href="/leistungen">Leistungen ansehen</a>
@@ -157,5 +158,8 @@ const buildMonat = new Date().getMonth() + 1;
   const monat = String(new Date().getMonth() + 1);
   document.querySelectorAll<HTMLElement>('[data-month]').forEach((el) => {
     el.hidden = el.dataset.month !== monat;
+  });
+  document.querySelectorAll<HTMLElement>('[data-saison]').forEach((el) => {
+    el.hidden = !(el.dataset.saison ?? '').split(' ').includes(monat);
   });
 </script>

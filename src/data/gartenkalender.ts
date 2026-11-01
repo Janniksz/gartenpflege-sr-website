@@ -114,3 +114,11 @@ export const gartenkalender: Monat[] = [
     ],
   },
 ];
+
+// Kurzer Hinweis für den Hero der Startseite, je nach Jahreszeit (Monate 1–12).
+export const saisonHinweise = [
+  { id: 'winter', monate: [12, 1, 2], text: 'Jetzt im Winter: Rückschnitt planen' },
+  { id: 'fruehling', monate: [3, 4, 5], text: 'Jetzt im Frühling: Beete und Rasenstart' },
+  { id: 'sommer', monate: [6, 7, 8], text: 'Jetzt im Sommer: Rasen und Formschnitt' },
+  { id: 'herbst', monate: [9, 10, 11], text: 'Jetzt im Herbst: Laub und Rückschnitt' },
+];

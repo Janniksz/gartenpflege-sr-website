@@ -131,8 +131,17 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: var(--space-12); align-items: center; padding-block: var(--space-16) var(--space-24); }
 .hero-text { display: flex; flex-direction: column; gap: var(--space-4); }
 .arch { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius-full) var(--radius-full) var(--radius-sm) var(--radius-sm); }
-.tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: 15px; font-weight: 600; color: var(--moss); }
-.dot { width: 4px; height: 4px; border-radius: var(--radius-full); background: var(--leaf); }
+/* Jahreszeit-Hinweis im Hero: kleine Pille, führt zum Gartenkalender */
+.saison-hinweis { display: inline-flex; align-self: flex-start; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-full); background: var(--sprout-soft); color: var(--forest); font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.2s ease; }
+.saison-hinweis:hover { background: var(--sprout); }
+.saison-hinweis svg { width: 16px; height: 16px; flex: none; }
+.saison-punkt { width: 8px; height: 8px; flex: none; border-radius: var(--radius-full); background: var(--leaf); }
+/* Handgezeichneter Strich unter einem Wort, zeichnet sich einmal beim Laden */
+.strich { position: relative; white-space: nowrap; }
+.strich svg { position: absolute; left: -2%; bottom: -0.14em; width: 104%; height: 0.3em; overflow: visible; }
+.strich path { fill: none; stroke: var(--sprout); stroke-width: 6px; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
+@keyframes zeichnen { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: no-preference) { .strich path { animation: zeichnen 0.9s ease-out 0.4s both; } }
 
 /* Leistungen kompakt (Start) */
 /* Leistungs-Kacheln: Icon, Name, Pfeil; führen zur passenden Karte auf der Leistungsseite. */
