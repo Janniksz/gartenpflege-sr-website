@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { firma } from '../data/firma';
@@ -15,7 +15,7 @@ import foto from '../assets/fotos/robin-stocker.jpg';
     </header>
 
     <section class="about" aria-labelledby="person-titel">
-      <Image class="about-foto" src={foto} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
+      <Picture class="about-foto" src={foto} formats={['avif', 'webp']} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
       <div class="stack">
         <h2 class="h3" id="person-titel">Ich bin {firma.inhaber}.</h2>
         <p>Ich wohne in Soltau und kümmere mich mit Leidenschaft um Gärten in der Region. Ob Rasen, Hecke oder Beet: Ich packe gerne mit an.</p>

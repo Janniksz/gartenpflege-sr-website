@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { firma } from '../data/firma';
+import Icon from '../components/Icon.astro';
+import { firma, leistungen } from '../data/firma';
 
 // Texte je Leistung. „[...]" = Platzhalter, bitte ergänzen oder löschen.
 // Richtpreise: Feld „preis" füllen, sobald entschieden ist, ob Preise genannt werden.
@@ -63,6 +64,14 @@ const details = [
       <p class="lead text-max">Gartenpflege in {firma.gebiet} – einmalig oder regelmäßig. Den Preis bespreche ich immer vorab mit Ihnen.</p>
     </header>
 
+    <nav class="schnellnav" aria-label="Zu einer Leistung springen" data-schnellnav>
+      <div class="schnellnav-liste">
+        {leistungen.map((l) => (
+          <a href={`#${l.id}`} data-ziel={l.id}><Icon name={l.id} />{l.kurz}</a>
+        ))}
+      </div>
+    </nav>
+
     <div class="service-details">
     {details.map((d) => (
       <section class="service-detail" id={d.id} aria-labelledby={`${d.id}-titel`}>
@@ -122,3 +131,49 @@ const details = [
     </div>
   </section>
 </Base>
+
+<script>
+  // Kommt man über einen Link wie /leistungen#hecke, steht die Karte senkrecht mittig
+  // im sichtbaren Bereich unter der Kopfzeile (ist sie höher als der Bildschirm: oben).
+  const mittig = (verhalten: ScrollBehavior = 'instant') => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const karte = id ? document.getElementById(id) : null;
+    if (!karte || !karte.classList.contains('service-detail')) return;
+    const kopf = document.querySelector('.site-header');
+    const nav = document.querySelector('[data-schnellnav]');
+    const kopfHoehe =
+      (kopf && getComputedStyle(kopf).position === 'sticky' ? kopf.getBoundingClientRect().height : 0) +
+      (nav ? nav.getBoundingClientRect().height : 0);
+    const leiste = document.querySelector('.anruf-leiste');
+    const leisteHoehe = leiste && getComputedStyle(leiste).display !== 'none' ? leiste.getBoundingClientRect().height : 0;
+    const platz = window.innerHeight - kopfHoehe - leisteHoehe;
+    const r = karte.getBoundingClientRect();
+    const abstand = r.height < platz ? (platz - r.height) / 2 : 16;
+    window.scrollTo({ top: r.top + window.scrollY - kopfHoehe - abstand, behavior: verhalten });
+  };
+  mittig();
+  window.addEventListener('load', () => mittig(), { once: true });
+  window.addEventListener('hashchange', () => mittig('smooth'));
+
+  // Schnellnavigation: markiert die Leistung, die gerade in der Bildschirmmitte ist,
+  // und schiebt den passenden Knopf auf dem Handy ins Bild.
+  const navListe = document.querySelector<HTMLElement>('.schnellnav-liste');
+  const knoepfe = [...document.querySelectorAll<HTMLAnchorElement>('[data-ziel]')];
+  if (navListe && 'IntersectionObserver' in window) {
+    const markiere = (id: string) => {
+      knoepfe.forEach((k) => {
+        const an = k.dataset.ziel === id;
+        if (an) {
+          k.setAttribute('aria-current', 'true');
+          const links = k.offsetLeft - (navListe.clientWidth - k.offsetWidth) / 2;
+          navListe.scrollTo({ left: links, behavior: 'smooth' });
+        } else k.removeAttribute('aria-current');
+      });
+    };
+    const beobachter = new IntersectionObserver(
+      (eintraege) => eintraege.forEach((e) => e.isIntersecting && markiere(e.target.id)),
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    document.querySelectorAll('.service-detail').forEach((k) => beobachter.observe(k));
+  }
+</script>

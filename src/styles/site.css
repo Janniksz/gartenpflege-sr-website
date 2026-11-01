@@ -211,6 +211,17 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 
 /* Leistungen-Seite */
 .page-head { padding-block: var(--space-16) var(--space-12); display: flex; flex-direction: column; gap: var(--space-4); }
+/* Schnellnavigation: klebt beim Scrollen unter der Kopfzeile; auf dem Handy seitlich wischbar. */
+.schnellnav { position: sticky; top: 0; z-index: 4; margin: 0 calc(-1 * var(--space-6)) var(--space-8); padding: var(--space-2) var(--space-6); background: var(--surface); border-bottom: 1px solid var(--line); }
+@media (min-width: 861px) { .schnellnav { top: 65px; } }
+.schnellnav-liste { display: flex; gap: var(--space-2); overflow-x: auto; scrollbar-width: none; }
+.schnellnav-liste::-webkit-scrollbar { display: none; }
+.schnellnav a { display: inline-flex; flex: none; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4); border: 1.5px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); color: var(--ink); font-size: 15px; font-weight: 600; text-decoration: none; transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+.schnellnav a svg { width: 18px; height: 18px; color: var(--leaf); }
+.schnellnav a:hover { border-color: var(--moss); }
+.schnellnav a[aria-current] { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+.schnellnav a[aria-current] svg { color: var(--sprout); }
+.service-detail { scroll-margin-top: 160px; }
 /* Leistungen als Karten, zwei nebeneinander; auf dem Handy untereinander. */
 .service-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); padding-bottom: var(--space-16); }
 @media (max-width: 760px) { .service-details { grid-template-columns: 1fr; gap: var(--space-4); } }
@@ -291,6 +302,25 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .ba-label--nachher { right: var(--space-3); }
 .ba input[type='range'] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
 .ba:has(input:focus-visible) { box-shadow: var(--focus-ring); }
+/* Vollbild-Knopf nur auf dem Handy */
+.ba-gross { display: none; position: absolute; right: var(--space-3); bottom: var(--space-3); z-index: 2; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--radius-full); background: var(--forest); color: var(--on-forest); cursor: pointer; }
+.ba-gross svg { width: 20px; height: 20px; }
+.ba-gross-zu { display: none; }
+.ba-gross:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+@media (max-width: 760px) { .ba-gross { display: grid; } }
+.karussell-karte:not([data-pos='mitte']) .ba-gross { pointer-events: none; }
+/* Vollbild: Regler füllt den Bildschirm, Bilder ganz sichtbar auf dunklem Grund */
+.ba.ist-vollbild { position: fixed; inset: 0; z-index: 50; aspect-ratio: auto; border-radius: 0; background: var(--ink); }
+.ba.ist-vollbild img { object-fit: contain; background-color: transparent; }
+.ba.ist-vollbild .ba-gross { top: calc(var(--space-3) + env(safe-area-inset-top)); bottom: auto; }
+.ba.ist-vollbild .ba-gross-auf { display: none; }
+.ba.ist-vollbild .ba-gross-zu { display: block; }
+.ba.ist-vollbild .ba-label { top: calc(var(--space-16) + env(safe-area-inset-top)); }
+.vollbild-offen, .vollbild-offen body { overflow: hidden; }
+/* Im Karussell würde die 3D-Bühne das Vollbild einsperren; die Anruf-Leiste läge darüber. */
+.karussell.ist-aktiv .karussell-buehne:has(.ist-vollbild) { perspective: none; }
+.karussell-karte:has(.ist-vollbild) { z-index: 60; }
+.vollbild-offen .anruf-leiste { display: none; }
 
 /* Gartenkalender */
 /* Monatsleiste: 12 Reiter. Gewählter Monat gefüllt, aktueller Monat grün umrandet. */
@@ -393,6 +423,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .card:hover img { transform: none; }
 }
 
+/* Rückmeldung beim Antippen: Knöpfe und Kacheln geben leicht nach (statt des grauen Standard-Blitzes). */
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+.btn, .kachel, .wegweiser a, .kal-leiste a, .schnellnav a, .karussell-pfeil, .menue-knopf, .ba-gross, .social a, .filter button { transition-property: transform, background, border-color, color, box-shadow; transition-duration: 0.12s; }
+.btn:active, .kachel:active, .wegweiser a:active, .kal-leiste a:active, .schnellnav a:active, .karussell-pfeil:active, .menue-knopf:active, .ba-gross:active, .social a:active, .filter button:active { transform: scale(0.97); }
+
 /* Weiche Seitenübergänge zwischen den Seiten (vom Browser, ohne Skript).
    Kopfzeile und Anruf-Leiste bleiben dabei stehen, nur der Inhalt blendet über. */
 @media (prefers-reduced-motion: no-preference) {
@@ -405,6 +440,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 @media (prefers-reduced-motion: reduce) {
   .kachel, .kachel-pfeil, .ba-griff, .logo img, .site-header, .site-header .container, .faq summary::after { transition: none; }
   .kachel:hover, .kachel:hover .kachel-pfeil { transform: none; }
+  .btn:active, .kachel:active, .wegweiser a:active, .kal-leiste a:active, .schnellnav a:active, .karussell-pfeil:active, .menue-knopf:active, .ba-gross:active, .social a:active, .filter button:active { transform: none; }
   .ba.ba-hinweis, .kal-reiter .kal-monat.ist-gewaehlt, .service-detail:target, .project:target { animation: none; }
   .faq details::details-content { transition: none; }
 }

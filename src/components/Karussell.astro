@@ -71,7 +71,7 @@ const { folien, label } = Astro.props;
         const istMitte = pos === 'mitte';
         // Nur die mittlere Karte ist bedienbar; die anderen holt man per Klick nach vorn.
         k.setAttribute('aria-hidden', String(!istMitte));
-        k.querySelectorAll<HTMLElement>('input, a').forEach((el) => (el.tabIndex = istMitte ? 0 : -1));
+        k.querySelectorAll<HTMLElement>('input, a, button').forEach((el) => (el.tabIndex = istMitte ? 0 : -1));
       });
       punkte.forEach((p, i) => p.setAttribute('aria-current', String(i === aktiv)));
       if (ansagen && ansage) ansage.textContent = karten[aktiv].getAttribute('aria-label') ?? '';

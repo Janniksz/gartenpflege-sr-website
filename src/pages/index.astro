@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -47,7 +47,7 @@ const buildMonat = new Date().getMonth() + 1;
           <a class="btn btn--secondary" href="/leistungen">Leistungen ansehen</a>
         </div>
       </div>
-      <Image class="arch" src={garten} alt="Gepflegter Garten mit Rasen, Hecken und blühenden Hortensien" widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 540px" loading="eager" />
+      <Picture class="arch" src={garten} formats={['avif', 'webp']} alt="Gepflegter Garten mit Rasen, Hecken und blühenden Hortensien" widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 540px" loading="eager" fetchpriority="high" />
     </section>
   </div>
 
@@ -133,7 +133,7 @@ const buildMonat = new Date().getMonth() + 1;
 
   <section class="section section--sunken" aria-labelledby="ueber-titel">
     <div class="container about">
-      <Image class="about-foto" src={foto} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
+      <Picture class="about-foto" src={foto} formats={['avif', 'webp']} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
       <div class="stack">
         <p class="eyebrow">Über mich</p>
         <h2 class="h2" id="ueber-titel">Ihr Ansprechpartner: {firma.inhaber}.</h2>
