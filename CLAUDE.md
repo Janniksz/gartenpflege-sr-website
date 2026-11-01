@@ -27,7 +27,7 @@ Statische Website für Gartenpflege SR (Gartenpflege in Soltau & Umgebung), geba
 ## Design-Regeln
 
 - Nur Tokens aus `tokens.css` verwenden (`var(--forest)`, `var(--space-6)` …). Keine neuen Farben, Schriften oder festen Hex-Werte in Komponenten.
-- Farben: Creme (`--surface`) als Grund, Waldgrün (`--forest`) für Kontaktband, Hauptbutton und den Versprechen-Abschnitt der Startseite (`.section--forest`, höchstens ein grüner Abschnitt pro Seite), `--moss` als einzige grüne Textfarbe auf hellem Grund, `--leaf` nur für Icons auf hellem Grund, auf Grün `--sprout`. Text immer `--ink` / `--ink-muted`, auf Grün `--on-forest`.
+- Farben: Creme (`--surface`) als Grund, Waldgrün (`--forest`) für Kontaktband, Hauptbutton und höchstens einen grünen Abschnitt pro Seite (`.section--forest`: Startseite Versprechen, Leistungen Ablauf), `--moss` als einzige grüne Textfarbe auf hellem Grund, `--leaf` nur für Icons auf hellem Grund, auf Grün `--sprout`. Text immer `--ink` / `--ink-muted`, auf Grün `--on-forest`.
 - Schriften: Fraunces 600 für Überschriften, DM Sans für Text. Beide liegen lokal in `public/fonts/`.
 - Formen: Pillen-Buttons (`.btn`), Fotos im Hero mit Bogen oben (`.arch`), Karten `--radius-md`. Keine Verläufe, keine Wellen, keine Emojis, keine Karten mit farbigem Rand links.
 - Layout: Inhalte in `.container`; Startseiten-Hero füllt den ersten Bildschirm (`.hero`, nichts darüber hinzufügen).

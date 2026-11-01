@@ -40,6 +40,13 @@ const links = [
   const kopf = document.querySelector<HTMLElement>('[data-kopf]');
   const knopf = document.querySelector<HTMLButtonElement>('[data-menue-knopf]');
   const text = document.querySelector<HTMLElement>('[data-menue-text]');
+  // Am Desktop wird die Kopfzeile beim Scrollen schlanker (Stile in site.css).
+  if (kopf) {
+    const pruefe = () => kopf.classList.toggle('ist-gescrollt', window.scrollY > 40);
+    window.addEventListener('scroll', pruefe, { passive: true });
+    pruefe();
+  }
+
   if (kopf && knopf) {
     const setze = (offen: boolean) => {
       kopf.classList.toggle('ist-offen', offen);

@@ -53,10 +53,10 @@ const anker = (name: string) => name.toLowerCase();
         <div class="kal-blaettern" hidden data-blaettern>
           <button type="button" class="btn btn--secondary btn--sm" data-zurueck>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
-            <span data-zurueck-name></span>
+            <span class="sr-only">Vorheriger Monat: </span><span data-zurueck-name></span>
           </button>
           <button type="button" class="btn btn--secondary btn--sm" data-weiter>
-            <span data-weiter-name></span>
+            <span class="sr-only">Nächster Monat: </span><span data-weiter-name></span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
           </button>
         </div>
@@ -102,7 +102,11 @@ const anker = (name: string) => name.toLowerCase();
         t.setAttribute('aria-selected', String(an));
         t.tabIndex = an ? 0 : -1;
       });
-      monate.forEach((m, i) => (m.hidden = i + 1 !== nr));
+      monate.forEach((m, i) => {
+        const an = i + 1 === nr;
+        m.classList.toggle('ist-gewaehlt', an);
+        m.setAttribute('aria-hidden', String(!an));
+      });
       if (zurueckName) zurueckName.textContent = name(nachbar(nr, -1));
       if (weiterName) weiterName.textContent = name(nachbar(nr, 1));
       if (fokus) tabs[nr - 1].focus();

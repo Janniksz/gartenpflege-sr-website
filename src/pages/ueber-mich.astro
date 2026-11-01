@@ -6,6 +6,7 @@ import { firma } from '../data/firma';
 import foto from '../assets/fotos/robin-stocker.jpg';
 ---
 <Base title="Über mich" description={`${firma.inhaber} von ${firma.name}: Ihr Ansprechpartner für Gartenpflege in ${firma.gebiet}.`}>
+  <div class="seite-start">
   <div class="container">
     <header class="page-head">
       <p class="eyebrow">{firma.name}</p>
@@ -34,6 +35,7 @@ import foto from '../assets/fotos/robin-stocker.jpg';
       <div class="trust-item"><Icon name="blatt" /><h3>Gründlich</h3><p>Ihr Garten wird sauber und ordentlich hinterlassen.</p></div>
     </div>
   </section>
+  </div>
 
   <section class="section section--sunken" aria-labelledby="gebiet-titel">
     <div class="container stack">

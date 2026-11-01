@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import Check from '../components/Check.astro';
 import Karussell from '../components/Karussell.astro';
 import { firma, leistungen } from '../data/firma';
 import { gartenkalender } from '../data/gartenkalender';
@@ -58,9 +57,15 @@ const buildMonat = new Date().getMonth() + 1;
         <p class="eyebrow">Rund um Ihren Garten</p>
         <h2 class="h2" id="leistungen-titel">Meine Leistungen.</h2>
       </div>
-      <ul class="service-grid">
+      <ul class="kacheln">
         {leistungen.map((l) => (
-          <li><Check /><a href={`/leistungen#${l.id}`}>{l.titel}</a></li>
+          <li>
+            <a class="kachel" href={`/leistungen#${l.id}`}>
+              <span class="kachel-icon"><Icon name={l.id} /></span>
+              <span class="kachel-text">{l.titel}</span>
+              <svg class="kachel-pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </a>
+          </li>
         ))}
       </ul>
     </div>
@@ -96,21 +101,33 @@ const buildMonat = new Date().getMonth() + 1;
   )}
 
   <section class="section container" aria-labelledby="gerade-titel">
-    <div class="month-box">
-      <div class="stack" style="gap: var(--space-2)">
-        <p class="eyebrow">Aus dem Gartenkalender</p>
+    <div class="kal-karte">
+      <div class="kal-monat">
+        <div class="kal-kopf">
+          <p class="eyebrow">Aus dem Gartenkalender</p>
+          {gartenkalender.map((m) => (
+            <h2 class="h3" id={m.nr === buildMonat ? 'gerade-titel' : undefined} data-month={m.nr} hidden={m.nr !== buildMonat}>Gerade dran im {m.name}.</h2>
+          ))}
+        </div>
         {gartenkalender.map((m) => (
-          <h2 class="h3" id={m.nr === buildMonat ? 'gerade-titel' : undefined} data-month={m.nr} hidden={m.nr !== buildMonat}>Gerade dran im {m.name}.</h2>
+          <ul class="kal-arbeiten" data-month={m.nr} hidden={m.nr !== buildMonat}>
+            {m.arbeiten.map((a) => {
+              const l = leistungen.find((x) => x.id === a.leistung);
+              return (
+                <li class="kal-arbeit">
+                  <h3>{a.titel}</h3>
+                  <p>{a.text}</p>
+                  {l && <span class="kal-tag">{l.kurz}</span>}
+                </li>
+              );
+            })}
+          </ul>
         ))}
       </div>
-      {gartenkalender.map((m) => (
-        <ul data-month={m.nr} hidden={m.nr !== buildMonat}>
-          {m.arbeiten.map((a) => (
-            <li class="task stack" style="gap: var(--space-1)"><h3 class="h4" style="font-size: 17px">{a.titel}</h3><p>{a.text}</p></li>
-          ))}
-        </ul>
-      ))}
-      <p><a href="/gartenkalender">Zum ganzen Gartenkalender</a></p>
+      <div class="kal-fuss">
+        <p class="muted">Was in den anderen Monaten ansteht, steht im Gartenkalender.</p>
+        <a class="btn btn--secondary btn--sm" href="/gartenkalender">Zum Gartenkalender</a>
+      </div>
     </div>
   </section>
 

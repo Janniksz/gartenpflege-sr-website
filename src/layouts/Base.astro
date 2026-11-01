@@ -6,7 +6,9 @@ import ContactBand from '../components/ContactBand.astro';
 import SanftesScrollen from '../components/SanftesScrollen.astro';
 import Einblenden from '../components/Einblenden.astro';
 import AnrufLeiste from '../components/AnrufLeiste.astro';
+import { Image } from 'astro:assets';
 import Icon from '../components/Icon.astro';
+import logo from '../assets/logo/firmenlogo.png';
 import { firma } from '../data/firma';
 
 interface Props {
@@ -76,9 +78,32 @@ const jsonLd = {
     </main>
     {kontakt && <ContactBand />}
     <footer class="site-footer">
-      <div class="container">
-        <p>© {new Date().getFullYear()} {firma.name} · {firma.claim}</p>
-        <ul class="social" aria-label="Social Media">
+      <div class="container footer-raster">
+        <div class="footer-marke">
+          <Image src={logo} alt={firma.name} height={64} densities={[1, 2]} />
+          <p class="muted">{firma.claim}<br />Gartenpflege in {firma.gebiet}.</p>
+        </div>
+        <nav aria-labelledby="footer-seiten">
+          <p class="footer-titel" id="footer-seiten">Seiten</p>
+          <ul class="footer-liste">
+            <li><a href="/">Start</a></li>
+            <li><a href="/leistungen">Leistungen</a></li>
+            <li><a href="/referenzen">Referenzen</a></li>
+            <li><a href="/gartenkalender">Gartenkalender</a></li>
+            <li><a href="/ueber-mich">Über mich</a></li>
+          </ul>
+        </nav>
+        <div>
+          <p class="footer-titel">Kontakt</p>
+          <ul class="footer-liste">
+            <li><a href={firma.telefonLink}><Icon name="telefon" />{firma.telefonAnzeige}</a></li>
+            <li><a href={firma.whatsappLink}><Icon name="nachricht" />WhatsApp</a></li>
+            <li><a href={firma.emailLink}><Icon name="mail" />{firma.email}</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-titel">Folgen</p>
+          <ul class="social" aria-label="Social Media">
           {firma.social.map((s) =>
             s.url.startsWith('http') ? (
               <li><a href={s.url} target="_blank" rel="noopener" aria-label={`${firma.name} auf ${s.name}`}><Icon name={s.id} /></a></li>
@@ -86,7 +111,11 @@ const jsonLd = {
               <li><span class="social-platzhalter"><Icon name={s.id} />{s.url}</span></li>
             ),
           )}
-        </ul>
+          </ul>
+        </div>
+      </div>
+      <div class="container footer-unten">
+        <p>© {new Date().getFullYear()} {firma.name}</p>
         <nav aria-label="Rechtliches">
           <a href="/impressum">Impressum</a>
           <a href="/datenschutz">Datenschutz</a>

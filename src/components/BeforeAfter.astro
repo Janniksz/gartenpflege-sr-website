@@ -16,7 +16,11 @@ const loading = eager ? 'eager' : 'lazy';
 <figure class="ba" data-ba>
   <Image src={vorher} alt={`Vorher: ${beschreibung}`} widths={[640, 1024, 1600]} sizes="(max-width: 1120px) 100vw, 1072px" loading={loading} />
   <Image class="ba-after" src={nachher} alt={`Nachher: ${beschreibung}`} widths={[640, 1024, 1600]} sizes="(max-width: 1120px) 100vw, 1072px" loading={loading} />
-  <span class="ba-line" aria-hidden="true"></span>
+  <span class="ba-line" aria-hidden="true">
+    <span class="ba-griff">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5" /></svg>
+    </span>
+  </span>
   <span class="ba-label ba-label--vorher" aria-hidden="true">Vorher</span>
   <span class="ba-label ba-label--nachher" aria-hidden="true">Nachher</span>
   <input type="range" min="0" max="100" value="50" aria-label={`Vorher/Nachher vergleichen: ${beschreibung}`} />
@@ -27,7 +31,29 @@ const loading = eager ? 'eager' : 'lazy';
     const input = box.querySelector('input');
     if (!input) return;
     const set = () => box.style.setProperty('--pos', `${input.value}%`);
-    input.addEventListener('input', set);
+    input.addEventListener('input', () => {
+      box.classList.remove('ba-hinweis');
+      set();
+    });
     set();
   });
+
+  // Der erste Regler der Seite schwingt einmal kurz hin und her, wenn er ins Bild kommt,
+  // damit klar ist, dass man ihn ziehen kann. Bei „Bewegung reduzieren" nicht.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const beobachter = new IntersectionObserver(
+      (eintraege) =>
+        eintraege.forEach((e) => {
+          const box = e.target as HTMLElement;
+          const karte = box.closest<HTMLElement>('[data-pos]');
+          if (!e.isIntersecting || (karte && karte.dataset.pos !== 'mitte')) return;
+          box.classList.add('ba-hinweis');
+          box.addEventListener('animationend', () => box.classList.remove('ba-hinweis'), { once: true });
+          beobachter.unobserve(box);
+        }),
+      { threshold: 0.6 },
+    );
+    const erster = document.querySelector('[data-ba]');
+    if (erster) beobachter.observe(erster);
+  }
 </script>
