@@ -10,7 +10,7 @@ const details = [
     id: 'rasen',
     titel: 'Rasenmähen',
     text: 'Ein gleichmäßig gemähter Rasen ist die Grundlage für einen gepflegten Garten. Ich mähe einmalig oder regelmäßig während der Saison.',
-    dazu: 'Mähen der Rasenflächen, Schnittgut aufnehmen. [Kanten schneiden? bitte prüfen]',
+    dazu: 'Mähen der Rasenflächen, Rasenkanten schneiden, Schnittgut aufnehmen.',
     zeit: 'April bis Oktober, in der Hauptwachstumszeit am besten wöchentlich.',
     preis: '',
   },
@@ -133,47 +133,101 @@ const details = [
 </Base>
 
 <script>
-  // Kommt man über einen Link wie /leistungen#hecke, steht die Karte senkrecht mittig
-  // im sichtbaren Bereich unter der Kopfzeile (ist sie höher als der Bildschirm: oben).
-  const mittig = (verhalten: ScrollBehavior = 'instant') => {
-    const id = decodeURIComponent(location.hash.slice(1));
-    const karte = id ? document.getElementById(id) : null;
-    if (!karte || !karte.classList.contains('service-detail')) return;
+  // Sprünge zu einer Leistung: Die Karte steht senkrecht mittig im sichtbaren Bereich
+  // (unter Kopfzeile und Schnellnavigation, über der Anruf-Leiste) und leuchtet kurz auf.
+  const karten = [...document.querySelectorAll<HTMLElement>('.service-detail')];
+  const knoepfe = [...document.querySelectorAll<HTMLAnchorElement>('[data-ziel]')];
+  const navListe = document.querySelector<HTMLElement>('.schnellnav-liste');
+  const karteVon = (id: string) => karten.find((k) => k.id === id) ?? null;
+  let markiert = '';
+  let gesperrtBis = 0;
+
+  const zielPosition = (karte: HTMLElement) => {
     const kopf = document.querySelector('.site-header');
     const nav = document.querySelector('[data-schnellnav]');
-    const kopfHoehe =
+    const leiste = document.querySelector('.anruf-leiste');
+    const oben =
       (kopf && getComputedStyle(kopf).position === 'sticky' ? kopf.getBoundingClientRect().height : 0) +
       (nav ? nav.getBoundingClientRect().height : 0);
-    const leiste = document.querySelector('.anruf-leiste');
-    const leisteHoehe = leiste && getComputedStyle(leiste).display !== 'none' ? leiste.getBoundingClientRect().height : 0;
-    const platz = window.innerHeight - kopfHoehe - leisteHoehe;
+    const unten = leiste && getComputedStyle(leiste).display !== 'none' ? leiste.getBoundingClientRect().height : 0;
+    const platz = window.innerHeight - oben - unten;
     const r = karte.getBoundingClientRect();
     const abstand = r.height < platz ? (platz - r.height) / 2 : 16;
-    window.scrollTo({ top: r.top + window.scrollY - kopfHoehe - abstand, behavior: verhalten });
+    return r.top + window.scrollY - oben - abstand;
   };
-  mittig();
-  window.addEventListener('load', () => mittig(), { once: true });
-  window.addEventListener('hashchange', () => mittig('smooth'));
 
-  // Schnellnavigation: markiert die Leistung, die gerade in der Bildschirmmitte ist,
-  // und schiebt den passenden Knopf auf dem Handy ins Bild.
-  const navListe = document.querySelector<HTMLElement>('.schnellnav-liste');
-  const knoepfe = [...document.querySelectorAll<HTMLAnchorElement>('[data-ziel]')];
-  if (navListe && 'IntersectionObserver' in window) {
-    const markiere = (id: string) => {
-      knoepfe.forEach((k) => {
-        const an = k.dataset.ziel === id;
-        if (an) {
-          k.setAttribute('aria-current', 'true');
-          const links = k.offsetLeft - (navListe.clientWidth - k.offsetWidth) / 2;
-          navListe.scrollTo({ left: links, behavior: 'smooth' });
-        } else k.removeAttribute('aria-current');
-      });
-    };
-    const beobachter = new IntersectionObserver(
-      (eintraege) => eintraege.forEach((e) => e.isIntersecting && markiere(e.target.id)),
-      { rootMargin: '-45% 0px -45% 0px' },
-    );
-    document.querySelectorAll('.service-detail').forEach((k) => beobachter.observe(k));
+  // Genau einen Knopf markieren und ihn auf dem Handy in die Mitte der Leiste schieben.
+  const markiere = (id: string) => {
+    if (id === markiert) return;
+    markiert = id;
+    knoepfe.forEach((k) => {
+      if (k.dataset.ziel === id) {
+        k.setAttribute('aria-current', 'true');
+        navListe?.scrollTo({ left: k.offsetLeft - (navListe.clientWidth - k.offsetWidth) / 2, behavior: 'smooth' });
+      } else k.removeAttribute('aria-current');
+    });
+  };
+
+  const aufleuchten = (karte: HTMLElement) => {
+    karte.classList.remove('ist-ziel');
+    void karte.offsetWidth; // Animation neu starten
+    karte.classList.add('ist-ziel');
+  };
+
+  const springe = (karte: HTMLElement, verhalten: ScrollBehavior) => {
+    gesperrtBis = performance.now() + 1200; // währenddessen markiert das Scrollen nichts um
+    markiere(karte.id);
+    window.scrollTo({ top: zielPosition(karte), behavior: verhalten });
+  };
+
+  // Beim Öffnen über /leistungen#hecke
+  const start = karteVon(decodeURIComponent(location.hash.slice(1)));
+  if (start) {
+    springe(start, 'instant');
+    window.addEventListener('load', () => springe(start, 'instant'), { once: true });
   }
+
+  // Klick in der Schnellnavigation: nur unser eigenes, sanftes Scrollen (kein Browser-Sprung).
+  knoepfe.forEach((k) =>
+    k.addEventListener('click', (e) => {
+      const karte = karteVon(k.dataset.ziel ?? '');
+      if (!karte) return;
+      e.preventDefault();
+      history.replaceState(null, '', `#${karte.id}`);
+      springe(karte, 'smooth');
+      aufleuchten(karte);
+    }),
+  );
+  window.addEventListener('hashchange', () => {
+    const karte = karteVon(decodeURIComponent(location.hash.slice(1)));
+    if (karte) {
+      springe(karte, 'smooth');
+      aufleuchten(karte);
+    }
+  });
+
+  // Beim Scrollen die Leistung markieren, die auf Höhe der Bildschirmmitte liegt.
+  // Stehen zwei Karten nebeneinander, bleibt die gewählte markiert, sonst die linke.
+  let geplant = false;
+  const pruefe = () => {
+    geplant = false;
+    if (performance.now() < gesperrtBis || !karten.length) return;
+    const mitte = window.innerHeight / 2;
+    const reihe = karten.filter((k) => {
+      const r = k.getBoundingClientRect();
+      return r.top <= mitte && r.bottom >= mitte;
+    });
+    if (reihe.length) markiere(reihe.some((k) => k.id === markiert) ? markiert : reihe[0].id);
+    else if (mitte < karten[0].getBoundingClientRect().top || mitte > karten[karten.length - 1].getBoundingClientRect().bottom) markiere('');
+  };
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!geplant) {
+        geplant = true;
+        requestAnimationFrame(pruefe);
+      }
+    },
+    { passive: true },
+  );
 </script>

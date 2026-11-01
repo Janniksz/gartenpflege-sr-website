@@ -35,11 +35,22 @@ const loading = eager ? 'eager' : 'lazy';
   document.querySelectorAll<HTMLElement>('[data-ba]').forEach((box) => {
     const input = box.querySelector('input');
     if (!input) return;
-    const set = () => box.style.setProperty('--pos', `${input.value}%`);
+    const labelVorher = box.querySelector<HTMLElement>('.ba-label--vorher');
+    const labelNachher = box.querySelector<HTMLElement>('.ba-label--nachher');
+    const set = () => {
+      box.style.setProperty('--pos', `${input.value}%`);
+      // Beschriftung ausblenden, sobald ihr Bild an dieser Stelle nicht mehr zu sehen ist:
+      // Regler ganz rechts = nur Vorher sichtbar, also kein „Nachher“ und umgekehrt.
+      const x = (Number(input.value) / 100) * box.clientWidth;
+      labelVorher?.classList.toggle('ist-verdeckt', x < labelVorher.offsetLeft + labelVorher.offsetWidth);
+      labelNachher?.classList.toggle('ist-verdeckt', x > labelNachher.offsetLeft);
+    };
+    window.addEventListener('resize', set);
     // Vollbild: Klasse am Regler, Seite dahinter nicht scrollbar, Escape oder Kreuz schließt.
     const knopf = box.querySelector<HTMLButtonElement>('[data-vollbild]');
     const vollbild = (an: boolean) => {
       box.classList.toggle('ist-vollbild', an);
+      set();
       document.documentElement.classList.toggle('vollbild-offen', an);
       knopf?.setAttribute('aria-pressed', String(an));
       if (an) input.focus();

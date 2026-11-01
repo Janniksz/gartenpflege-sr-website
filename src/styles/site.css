@@ -244,7 +244,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .service-detail:hover { border-color: var(--moss); box-shadow: var(--shadow-card); }
 /* Angesprungene Karte leuchtet kurz auf und wird dann wieder normal. */
 @keyframes aufleuchten { 0%, 50% { border-color: var(--moss); box-shadow: 0 0 0 2px var(--moss), var(--shadow-card); } 100% { border-color: var(--line); box-shadow: none; } }
-.service-detail:target { animation: aufleuchten 2.4s ease-out; }
+.service-detail:target, .service-detail.ist-ziel { animation: aufleuchten 2.4s ease-out; }
 .service-detail dl { display: grid; gap: var(--space-2); margin: auto 0 0; padding-top: var(--space-4); border-top: 1px solid var(--line); }
 .service-detail dt { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss); }
 .service-detail dd { margin: 0 0 var(--space-2); }
@@ -313,6 +313,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .ba-label { position: absolute; top: var(--space-3); padding: 2px var(--space-3); border-radius: var(--radius-full); background: rgba(28, 42, 34, 0.75); color: var(--on-forest); font-size: 13px; font-weight: 600; pointer-events: none; }
 .ba-label--vorher { left: var(--space-3); }
 .ba-label--nachher { right: var(--space-3); }
+.ba-label { transition: opacity 0.2s ease; }
+.ba-label.ist-verdeckt { opacity: 0; }
 .ba input[type='range'] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
 .ba:has(input:focus-visible) { box-shadow: var(--focus-ring); }
 /* Vollbild-Knopf nur auf dem Handy */
@@ -463,6 +465,6 @@ a, button, summary { -webkit-tap-highlight-color: transparent; }
   .kachel, .kachel-pfeil, .ba-griff, .logo img, .site-header, .site-header .container, .faq summary::after { transition: none; }
   .kachel:hover, .kachel:hover .kachel-pfeil { transform: none; }
   .btn:active, .kachel:active, .wegweiser a:active, .kal-leiste a:active, .schnellnav a:active, .karussell-pfeil:active, .menue-knopf:active, .ba-gross:active, .social a:active, .filter button:active { transform: none; }
-  .ba.ba-hinweis, .kal-reiter .kal-monat.ist-gewaehlt, .service-detail:target, .project:target { animation: none; }
+  .ba.ba-hinweis, .kal-reiter .kal-monat.ist-gewaehlt, .service-detail:target, .service-detail.ist-ziel, .project:target { animation: none; }
   .faq details::details-content { transition: none; }
 }
