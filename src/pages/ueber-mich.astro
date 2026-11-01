@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { firma } from '../data/firma';
+import foto from '../assets/fotos/robin-stocker.jpg';
+---
+<Base title="Über mich" description={`${firma.inhaber} von ${firma.name}: Ihr Ansprechpartner für Gartenpflege in ${firma.gebiet}.`}>
+  <div class="container">
+    <header class="page-head">
+      <p class="eyebrow">{firma.name}</p>
+      <h1 class="h1">Über mich.</h1>
+      <p class="lead text-max">Bei {firma.name} haben Sie mit mir einen festen Ansprechpartner für Ihren Garten.</p>
+    </header>
+
+    <section class="about" aria-labelledby="person-titel">
+      <Image class="about-foto" src={foto} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
+      <div class="stack">
+        <h2 class="h3" id="person-titel">Ich bin {firma.inhaber}.</h2>
+        <p>Ich wohne in Soltau und kümmere mich mit Leidenschaft um Gärten in der Region. Ob Rasen, Hecke oder Beet: Ich packe gerne mit an.</p>
+        <p>[Ein bis zwei Sätze: Was mir bei der Arbeit wichtig ist.]</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="section container" aria-labelledby="versprechen-titel">
+    <div class="section-head">
+      <p class="eyebrow">So arbeite ich</p>
+      <h2 class="h2" id="versprechen-titel">Zuverlässig. Fair. Gründlich.</h2>
+    </div>
+    <div class="trust">
+      <div class="trust-item"><Icon name="kalender" /><h3>Zuverlässig</h3><p>Ich halte vereinbarte Termine ein.</p></div>
+      <div class="trust-item"><Icon name="preis" /><h3>Fair</h3><p>Den Preis bespreche ich vorab transparent mit Ihnen.</p></div>
+      <div class="trust-item"><Icon name="blatt" /><h3>Gründlich</h3><p>Ihr Garten wird sauber und ordentlich hinterlassen.</p></div>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="gebiet-titel">
+    <div class="container stack">
+      <p class="eyebrow">Einsatzgebiet</p>
+      <h2 class="h2" id="gebiet-titel">In {firma.gebiet} für Sie da.</h2>
+      <p class="lead text-max">Ich bin in Soltau und der direkten Umgebung unterwegs. Sie wohnen etwas weiter weg? Fragen Sie einfach nach.</p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,33 @@
+---
+// Vorher/Nachher-Regler: Nachher-Bild liegt über dem Vorher-Bild und wird per Regler aufgedeckt.
+// Funktioniert mit Maus, Finger und Tastatur (Pfeiltasten).
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  vorher: ImageMetadata;
+  nachher: ImageMetadata;
+  beschreibung: string;
+  eager?: boolean;
+}
+const { vorher, nachher, beschreibung, eager = false } = Astro.props;
+const loading = eager ? 'eager' : 'lazy';
+---
+<figure class="ba" data-ba>
+  <Image src={vorher} alt={`Vorher: ${beschreibung}`} widths={[640, 1024, 1600]} sizes="(max-width: 1120px) 100vw, 1072px" loading={loading} />
+  <Image class="ba-after" src={nachher} alt={`Nachher: ${beschreibung}`} widths={[640, 1024, 1600]} sizes="(max-width: 1120px) 100vw, 1072px" loading={loading} />
+  <span class="ba-line" aria-hidden="true"></span>
+  <span class="ba-label ba-label--vorher" aria-hidden="true">Vorher</span>
+  <span class="ba-label ba-label--nachher" aria-hidden="true">Nachher</span>
+  <input type="range" min="0" max="100" value="50" aria-label={`Vorher/Nachher vergleichen: ${beschreibung}`} />
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ba]').forEach((box) => {
+    const input = box.querySelector('input');
+    if (!input) return;
+    const set = () => box.style.setProperty('--pos', `${input.value}%`);
+    input.addEventListener('input', set);
+    set();
+  });
+</script>

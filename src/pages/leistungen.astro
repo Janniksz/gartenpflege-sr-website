@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import { firma } from '../data/firma';
+
+// Texte je Leistung. „[...]" = Platzhalter, bitte ergänzen oder löschen.
+// Richtpreise: Feld „preis" füllen, sobald entschieden ist, ob Preise genannt werden.
+const details = [
+  {
+    id: 'rasen',
+    titel: 'Rasenmähen',
+    text: 'Ein gleichmäßig gemähter Rasen ist die Grundlage für einen gepflegten Garten. Ich mähe einmalig oder regelmäßig während der Saison.',
+    dazu: 'Mähen der Rasenflächen, Schnittgut aufnehmen. [Kanten schneiden? bitte prüfen]',
+    zeit: 'April bis Oktober, in der Hauptwachstumszeit am besten wöchentlich.',
+    preis: '',
+  },
+  {
+    id: 'hecke',
+    titel: 'Hecken- und Formschnitt',
+    text: 'Ob Thuja, Liguster oder Buchenhecke: Ich bringe Hecken und Formgehölze wieder in Form – sauber und gerade.',
+    dazu: 'Schnitt der Seiten und der Oberkante, Schnittgut zusammenrechen und auf Wunsch mitnehmen.',
+    zeit: 'Formschnitt im Juni und im Spätsommer. Ein starker Rückschnitt ist nur von Oktober bis Februar erlaubt (§ 39 Bundesnaturschutzgesetz).',
+    preis: '',
+  },
+  {
+    id: 'laub',
+    titel: 'Laubentfernung',
+    text: 'Laub, das zu lange liegen bleibt, nimmt dem Rasen das Licht. Ich räume Rasen, Beete und Wege frei.',
+    dazu: 'Laub zusammentragen und auf Wunsch mitnehmen.',
+    zeit: 'Oktober und November, bei vielen Bäumen auch mehrmals.',
+    preis: '',
+  },
+  {
+    id: 'gruenschnitt',
+    titel: 'Entsorgung von Grünschnitt',
+    text: 'Kein Hänger, keine Fahrt zum Wertstoffhof: Grünschnitt, Laub und Schnittgut nehme ich mit und entsorge sie fachgerecht.',
+    dazu: 'Aufladen und Abtransport des Grünschnitts.',
+    zeit: 'Das ganze Jahr, meist zusammen mit Heckenschnitt oder Laubentfernung.',
+    preis: '',
+  },
+  {
+    id: 'beete',
+    titel: 'Pflege von Sträuchern und Beeten',
+    text: 'Damit Beete und Sträucher schön bleiben, brauchen sie regelmäßig etwas Aufmerksamkeit.',
+    dazu: 'Unkraut jäten, Verblühtes entfernen, Sträucher schneiden und auslichten, Beete im Herbst winterfest machen.',
+    zeit: 'März bis November.',
+    preis: '',
+  },
+  {
+    id: 'weitere',
+    titel: 'Weitere Gartenarbeiten auf Anfrage',
+    text: 'Etwas anderes zu tun? Sprechen Sie mich an – vieles lässt sich einrichten.',
+    dazu: '[Beispiele ergänzen, die wirklich angeboten werden.]',
+    zeit: 'Nach Absprache.',
+    preis: '',
+  },
+];
+---
+<Base title="Leistungen" description={`Rasenmähen, Hecken- und Formschnitt, Laubentfernung, Grünschnitt-Entsorgung und Beetpflege in ${firma.gebiet}. Was dazugehört und wann es dran ist.`}>
+  <div class="container">
+    <header class="page-head">
+      <p class="eyebrow">Leistungen</p>
+      <h1 class="h1">Was ich für Ihren Garten tue.</h1>
+      <p class="lead text-max">Gartenpflege in {firma.gebiet} – einmalig oder regelmäßig. Den Preis bespreche ich immer vorab mit Ihnen.</p>
+    </header>
+
+    <div class="service-details">
+    {details.map((d) => (
+      <section class="service-detail" id={d.id} aria-labelledby={`${d.id}-titel`}>
+        <h2 class="h4" id={`${d.id}-titel`}>{d.titel}</h2>
+        <p class="muted">{d.text}</p>
+        <dl>
+          <dt>Was dazugehört</dt>
+          <dd>{d.dazu}</dd>
+          <dt>Beste Zeit</dt>
+          <dd>{d.zeit}</dd>
+          {d.preis && <><dt>Richtpreis</dt><dd>{d.preis}</dd></>}
+        </dl>
+      </section>
+    ))}
+    </div>
+  </div>
+
+  <section class="section section--sunken" aria-labelledby="ablauf-titel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Ablauf</p>
+        <h2 class="h2" id="ablauf-titel">So läuft's ab.</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Anfrage</h3><p>Rufen Sie an oder schreiben Sie per WhatsApp, was zu tun ist.</p></li>
+        <li><h3>Besichtigung</h3><p>Ich schaue mir Ihren Garten kurz vor Ort an.</p></li>
+        <li><h3>Preis vorab</h3><p>Sie erfahren den Preis, bevor ich anfange. Ohne Überraschungen.</p></li>
+        <li><h3>Erledigung</h3><p>Ich arbeite zum vereinbarten Termin und hinterlasse alles ordentlich.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="faq-titel">
+    <div class="section-head">
+      <p class="eyebrow">Häufige Fragen</p>
+      <h2 class="h2" id="faq-titel">Gut zu wissen.</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Was kostet die Gartenpflege?</summary>
+        <p>Das hängt von Größe und Zustand des Gartens ab. Nach einer kurzen Besichtigung nenne ich Ihnen den Preis vorab und transparent.</p>
+      </details>
+      <details>
+        <summary>Nehmen Sie den Grünschnitt mit?</summary>
+        <p>Ja, auf Wunsch nehme ich Grünschnitt, Laub und Schnittgut mit und entsorge sie fachgerecht.</p>
+      </details>
+      <details>
+        <summary>Gibt es auch regelmäßige Pflege?</summary>
+        <p>[Antwort ergänzen, z. B. ob es feste Intervalle oder eine Saisonbetreuung gibt.]</p>
+      </details>
+      <details>
+        <summary>Wie schnell bekomme ich einen Termin?</summary>
+        <p>Melden Sie sich einfach. Bei der Anfrage nenne ich Ihnen den nächsten freien Termin.</p>
+      </details>
+    </div>
+  </section>
+</Base>

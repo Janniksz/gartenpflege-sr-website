@@ -1,0 +1,52 @@
+/* Gartenpflege SR — generated from tokens.json */
+@font-face { font-family: "Fraunces"; src: url("/fonts/fraunces-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url("/fonts/fraunces-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/dm-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/dm-sans-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/fonts/dm-sans-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+:root {
+  --surface: #F5F1E7;
+  --surface-raised: #FBF9F3;
+  --surface-sunken: #ECE6D8;
+  --line: #D9D2C2;
+  --ink: #1C2A22;
+  --ink-muted: #4A5750;
+  --forest: #1F3B2C;
+  --forest-hover: #2B4A36;
+  --on-forest: #F5F1E7;
+  --on-forest-muted: #C4D3B8;
+  --moss: #3F6128;
+  --leaf: #5B7F3A;
+  --sprout: #B8CF94;
+  --sprout-soft: #E1EAD2;
+  --link: var(--moss);
+  --shadow-card: 0 1px 2px rgba(28, 42, 34, 0.06), 0 8px 24px rgba(28, 42, 34, 0.08);
+  --focus-ring: 0 0 0 2px #F5F1E7, 0 0 0 4px #3F6128;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --content-max: 1120px;
+  --text-max: 640px;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+}
+.display-xl { font-family: var(--font-display); font-size: 56px; line-height: 58px; font-weight: 600; letter-spacing: -0.02em; }
+.display-l { font-family: var(--font-display); font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.015em; }
+.display-m { font-family: var(--font-display); font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.01em; }
+.display-s { font-family: var(--font-display); font-size: 21px; line-height: 26px; font-weight: 600; }
+.figure { font-family: var(--font-display); font-size: 34px; line-height: 38px; font-weight: 600; letter-spacing: -0.01em; }
+.lead { font-family: var(--font-sans); font-size: 18px; line-height: 28px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 600; }
+.eyebrow { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.small { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 400; }

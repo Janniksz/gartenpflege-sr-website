@@ -1,0 +1,25 @@
+---
+// Blendet Abschnitte beim Scrollen sanft ein (Stile in site.css unter „Sanftes Einblenden").
+// Ohne JavaScript oder bei „Bewegung reduzieren" ist alles sofort sichtbar.
+---
+<script>
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const teile = document.querySelectorAll<HTMLElement>('main .section > *');
+    const beobachter = new IntersectionObserver(
+      (eintraege) => {
+        eintraege.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('ist-sichtbar');
+          beobachter.unobserve(e.target);
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    teile.forEach((t) => {
+      // Was beim Laden schon zu sehen ist, nicht erst ausblenden.
+      if (t.getBoundingClientRect().top < window.innerHeight) t.classList.add('ist-sichtbar');
+      else beobachter.observe(t);
+    });
+    document.documentElement.classList.add('einblenden');
+  }
+</script>

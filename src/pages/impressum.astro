@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import { firma } from '../data/firma';
+---
+<Base title="Impressum" description={`Impressum von ${firma.name}.`} kontakt={false}>
+  <div class="container">
+    <header class="page-head">
+      <h1 class="h1">Impressum</h1>
+    </header>
+    <div class="legal">
+      <p class="warn">Vorlage: Alle Angaben in [eckigen Klammern] ergänzen und vor der Veröffentlichung prüfen, z. B. mit einem Impressum-Generator oder durch einen Anwalt.</p>
+
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <p>
+        {firma.inhaber}<br />
+        {firma.name}<br />
+        {firma.anschrift.strasse}<br />
+        {firma.anschrift.plz} {firma.anschrift.ort}
+      </p>
+
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: <a href={firma.telefonLink}>{firma.telefonAnzeige}</a><br />
+        E-Mail: <a href={`mailto:${firma.email}`}>{firma.email}</a>
+      </p>
+
+      <h2>Umsatzsteuer</h2>
+      <p>[Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG, falls vorhanden – sonst diesen Abschnitt löschen.]</p>
+
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p>{firma.inhaber}, Anschrift wie oben.</p>
+    </div>
+  </div>
+</Base>

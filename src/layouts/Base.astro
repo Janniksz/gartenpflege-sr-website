@@ -1,0 +1,91 @@
+---
+import '../styles/tokens.css';
+import '../styles/site.css';
+import Header from '../components/Header.astro';
+import ContactBand from '../components/ContactBand.astro';
+import SanftesScrollen from '../components/SanftesScrollen.astro';
+import Einblenden from '../components/Einblenden.astro';
+import Icon from '../components/Icon.astro';
+import { firma } from '../data/firma';
+
+interface Props {
+  title: string;
+  description: string;
+  kontakt?: boolean; // Kontaktband unten anzeigen
+  noindex?: boolean;
+}
+const { title, description, kontakt = true, noindex = false } = Astro.props;
+const fullTitle = Astro.url.pathname === '/' ? `${firma.name} – Gartenpflege in ${firma.gebiet}` : `${title} | ${firma.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// Strukturierte Daten für Google (lokales Unternehmen).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: firma.name,
+  description: `Gartenpflege in ${firma.gebiet}: Rasenmähen, Hecken- und Formschnitt, Laubentfernung, Grünschnitt-Entsorgung, Pflege von Sträuchern und Beeten.`,
+  telephone: firma.telefonLink.replace('tel:', ''),
+  email: firma.email,
+  url: Astro.site?.toString(),
+  logo: new URL('/logo.png', Astro.site).toString(),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: firma.anschrift.strasse,
+    postalCode: firma.anschrift.plz,
+    addressLocality: firma.anschrift.ort,
+    addressCountry: 'DE',
+  },
+  areaServed: firma.orte.filter((o) => !o.startsWith('[')),
+  sameAs: firma.social.map((s) => s.url).filter((u) => u.startsWith('http')),
+};
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/fraunces-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#1F3B2C" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+    <Header />
+    <main id="inhalt">
+      <slot />
+    </main>
+    {kontakt && <ContactBand />}
+    <footer class="site-footer">
+      <div class="container">
+        <p>© {new Date().getFullYear()} {firma.name} · {firma.claim}</p>
+        <ul class="social" aria-label="Social Media">
+          {firma.social.map((s) =>
+            s.url.startsWith('http') ? (
+              <li><a href={s.url} target="_blank" rel="noopener" aria-label={`${firma.name} auf ${s.name}`}><Icon name={s.id} /></a></li>
+            ) : (
+              <li><span class="social-platzhalter"><Icon name={s.id} />{s.url}</span></li>
+            ),
+          )}
+        </ul>
+        <nav aria-label="Rechtliches">
+          <a href="/impressum">Impressum</a>
+          <a href="/datenschutz">Datenschutz</a>
+        </nav>
+      </div>
+    </footer>
+    <SanftesScrollen />
+    <Einblenden />
+  </body>
+</html>

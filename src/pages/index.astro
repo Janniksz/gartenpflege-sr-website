@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Check from '../components/Check.astro';
+import Karussell from '../components/Karussell.astro';
+import { firma, leistungen } from '../data/firma';
+import { gartenkalender } from '../data/gartenkalender';
+import garten from '../assets/fotos/garten.jpg';
+import foto from '../assets/fotos/robin-stocker.jpg';
+
+const projekte = (await getCollection('projekte', ({ data }) => !data.entwurf)).sort(
+  (a, b) => b.data.datum.valueOf() - a.data.datum.valueOf(),
+);
+const datumFormat = new Intl.DateTimeFormat('de-DE', { month: 'long', year: 'numeric' });
+
+// Karussell: drei Vorher/Nachher-Paare. Erst das erste Bildpaar jedes Projekts (neueste zuerst),
+// dann weitere Bildpaare, falls es weniger als drei Projekte gibt.
+const alsFolie = (p: (typeof projekte)[number], b: (typeof projekte)[number]['data']['bilder'][number]) => ({
+  ...b,
+  titel: p.data.titel,
+  meta: `${p.data.ort} · ${datumFormat.format(p.data.datum)}`,
+  link: `/referenzen#${p.id}`,
+});
+const folien = [
+  ...projekte.map((p) => alsFolie(p, p.data.bilder[0])),
+  ...projekte.flatMap((p) => p.data.bilder.slice(1).map((b) => alsFolie(p, b))),
+].slice(0, 3);
+const buildMonat = new Date().getMonth() + 1;
+---
+<Base title="Start" description={`Gartenpflege in ${firma.gebiet}: Rasenmähen, Heckenschnitt, Laubentfernung und Beetpflege. Zuverlässig, fair und gründlich. Jetzt unverbindlich anfragen.`}>
+  <div class="erster-bildschirm">
+  <div class="container">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Gartenpflege in {firma.gebiet}</p>
+        <h1 class="h1">Gepflegt bis ins Detail.</h1>
+        <p class="lead">Sie genießen Ihren Garten – ich kümmere mich um den Rest.</p>
+        <div class="tags">
+          <span>Rasen</span><span class="dot" aria-hidden="true"></span>
+          <span>Hecken</span><span class="dot" aria-hidden="true"></span>
+          <span>Laub</span><span class="dot" aria-hidden="true"></span>
+          <span>Beete</span>
+        </div>
+        <div class="actions" style="margin-top: var(--space-2)">
+          <a class="btn btn--primary" href="#kontakt">Unverbindlich anfragen</a>
+          <a class="btn btn--secondary" href="/leistungen">Leistungen ansehen</a>
+        </div>
+      </div>
+      <Image class="arch" src={garten} alt="Gepflegter Garten mit Rasen, Hecken und blühenden Hortensien" widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 540px" loading="eager" />
+    </section>
+  </div>
+
+  <section class="section section--sunken" aria-labelledby="leistungen-titel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Rund um Ihren Garten</p>
+        <h2 class="h2" id="leistungen-titel">Meine Leistungen.</h2>
+      </div>
+      <ul class="service-grid">
+        {leistungen.map((l) => (
+          <li><Check /><a href={`/leistungen#${l.id}`}>{l.titel}</a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+  </div>
+
+  <section class="section section--forest" aria-labelledby="versprechen-titel">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Darauf können Sie sich verlassen</p>
+        <h2 class="h2" id="versprechen-titel">Zuverlässig. Fair. Gründlich.</h2>
+      </div>
+      <div class="trust">
+        <div class="trust-item"><Icon name="kalender" /><h3>Zuverlässig</h3><p>Ich halte vereinbarte Termine ein.</p></div>
+        <div class="trust-item"><Icon name="preis" /><h3>Fair</h3><p>Den Preis bespreche ich vorab transparent mit Ihnen.</p></div>
+        <div class="trust-item"><Icon name="blatt" /><h3>Gründlich</h3><p>Ihr Garten wird sauber und ordentlich hinterlassen.</p></div>
+      </div>
+    </div>
+  </section>
+
+  {folien.length > 0 && (
+    <section class="section section--sunken karussell-abschnitt" aria-labelledby="referenzen-titel">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Vorher und nachher</p>
+          <h2 class="h2" id="referenzen-titel">Sehen Sie selbst.</h2>
+          <p class="muted">Ziehen Sie den Regler, um den Unterschied zu sehen.</p>
+        </div>
+        <Karussell folien={folien} label="Vorher/Nachher-Beispiele" />
+        <p class="karussell-alle"><a class="btn btn--secondary" href="/referenzen">Alle Projekte ansehen</a></p>
+      </div>
+    </section>
+  )}
+
+  <section class="section container" aria-labelledby="gerade-titel">
+    <div class="month-box">
+      <div class="stack" style="gap: var(--space-2)">
+        <p class="eyebrow">Aus dem Gartenkalender</p>
+        {gartenkalender.map((m) => (
+          <h2 class="h3" id={m.nr === buildMonat ? 'gerade-titel' : undefined} data-month={m.nr} hidden={m.nr !== buildMonat}>Gerade dran im {m.name}.</h2>
+        ))}
+      </div>
+      {gartenkalender.map((m) => (
+        <ul data-month={m.nr} hidden={m.nr !== buildMonat}>
+          {m.arbeiten.map((a) => (
+            <li class="task stack" style="gap: var(--space-1)"><h3 class="h4" style="font-size: 17px">{a.titel}</h3><p>{a.text}</p></li>
+          ))}
+        </ul>
+      ))}
+      <p><a href="/gartenkalender">Zum ganzen Gartenkalender</a></p>
+    </div>
+  </section>
+
+  <section class="section section--sunken" aria-labelledby="ueber-titel">
+    <div class="container about">
+      <Image class="about-foto" src={foto} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
+      <div class="stack">
+        <p class="eyebrow">Über mich</p>
+        <h2 class="h2" id="ueber-titel">Ihr Ansprechpartner: {firma.inhaber}.</h2>
+        <p class="lead">Ich wohne in Soltau und kümmere mich mit Leidenschaft um Gärten in der Region. Bei mir haben Sie einen festen Ansprechpartner für Ihren Garten.</p>
+        <p><a class="btn btn--secondary" href="/ueber-mich">Mehr über mich</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="gebiet-titel">
+    <div class="section-head">
+      <p class="eyebrow">Einsatzgebiet</p>
+      <h2 class="h2" id="gebiet-titel">In {firma.gebiet} für Sie da.</h2>
+    </div>
+    <p class="lead text-max">Ich bin in Soltau und der direkten Umgebung unterwegs. Sie wohnen etwas weiter weg? Fragen Sie einfach nach.</p>
+  </section>
+</Base>
+
+<script>
+  // Zeigt den aktuellen Monat, auch wenn die Seite in einem anderen Monat gebaut wurde.
+  const monat = String(new Date().getMonth() + 1);
+  document.querySelectorAll<HTMLElement>('[data-month]').forEach((el) => {
+    el.hidden = el.dataset.month !== monat;
+  });
+</script>

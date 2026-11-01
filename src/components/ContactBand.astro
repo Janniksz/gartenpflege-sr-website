@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/firma';
+---
+<section class="contact-wrap container" id="kontakt" aria-labelledby="kontakt-titel">
+  <div class="contact">
+    <div class="contact-main">
+      <p class="eyebrow">Kontakt</p>
+      <h2 id="kontakt-titel">Jetzt unverbindlich anfragen.</h2>
+      <a class="phone" href={firma.telefonLink}>{firma.telefonAnzeige}</a>
+      <p class="hint">Anruf oder WhatsApp</p>
+    </div>
+    <div class="contact-side">
+      <div class="actions">
+        <a class="btn btn--hell" href={firma.telefonLink}><Icon name="telefon" />Jetzt anrufen</a>
+        <a class="btn btn--outline-hell" href={firma.whatsappLink}><Icon name="nachricht" />WhatsApp</a>
+      </div>
+      <p class="hint">oder per E-Mail an <a class="mail" href={`mailto:${firma.email}`}>{firma.email}</a></p>
+    </div>
+  </div>
+</section>

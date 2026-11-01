@@ -1,0 +1,72 @@
+---
+// Sanftes Scrollen mit dem Mausrad: Die Seite gleitet zum Ziel, statt zu springen.
+// Tastatur, Bildlaufleiste und Touch bleiben unverändert.
+// Bei „Bewegung reduzieren" im System ist es abgeschaltet.
+---
+<script>
+  // Stärke: kleiner = weicher und länger nachgleitend (z. B. 0.08), größer = direkter (z. B. 0.25).
+  const STAERKE = 0.15;
+
+  const reduziert = matchMedia('(prefers-reduced-motion: reduce)');
+  let ziel = window.scrollY;
+  let aktuell = window.scrollY;
+  let laeuft = false;
+  let zuletzt = 0;
+
+  const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
+
+  // Eigene Scrollbereiche (z. B. ein Feld mit Bildlaufleiste) nicht übernehmen.
+  function hatEigenenScroll(el: Element | null, dy: number): boolean {
+    while (el && el !== document.body && el !== document.documentElement) {
+      const stil = getComputedStyle(el);
+      if (/(auto|scroll)/.test(stil.overflowY) && el.scrollHeight > el.clientHeight) {
+        if (dy < 0 ? el.scrollTop > 0 : el.scrollTop + el.clientHeight < el.scrollHeight) return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  // Hat etwas anderes die Seite bewegt (Link, Bildlaufleiste)? Dann nicht dagegen arbeiten.
+  const fremdBewegt = () => Math.abs(window.scrollY - aktuell) > 2;
+
+  function schritt(zeit: number) {
+    if (!laeuft) return;
+    if (fremdBewegt()) {
+      laeuft = false;
+      return;
+    }
+    // Zeitbasiert, damit es auf 60-Hz- und 144-Hz-Bildschirmen gleich schnell ist.
+    const dt = zuletzt ? Math.min(zeit - zuletzt, 50) : 16.7;
+    zuletzt = zeit;
+    aktuell += (ziel - aktuell) * (1 - Math.pow(1 - STAERKE, dt / 16.7));
+    if (Math.abs(ziel - aktuell) < 0.5) {
+      aktuell = ziel;
+      laeuft = false;
+    }
+    window.scrollTo({ top: aktuell, behavior: 'instant' });
+    if (laeuft) requestAnimationFrame(schritt);
+  }
+
+  window.addEventListener(
+    'wheel',
+    (e) => {
+      if (reduziert.matches || e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (hatEigenenScroll(e.target as Element, e.deltaY)) return;
+      e.preventDefault();
+      if (!laeuft || fremdBewegt()) ziel = aktuell = window.scrollY;
+      const einheit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerHeight : 1;
+      ziel = Math.max(0, Math.min(maxScroll(), ziel + e.deltaY * einheit));
+      if (!laeuft) {
+        laeuft = true;
+        zuletzt = 0;
+        requestAnimationFrame(schritt);
+      }
+    },
+    { passive: false },
+  );
+
+  // Greift jemand zur Tastatur, Bildlaufleiste oder klickt einen Link, sofort anhalten.
+  const anhalten = () => (laeuft = false);
+  ['keydown', 'mousedown', 'touchstart'].forEach((typ) => window.addEventListener(typ, anhalten, { passive: true }));
+</script>

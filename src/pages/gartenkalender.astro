@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import { firma, leistungen } from '../data/firma';
+import { gartenkalender } from '../data/gartenkalender';
+
+const leistung = (id?: string) => leistungen.find((l) => l.id === id);
+const jahreszeit = (nr: number) => (nr <= 2 || nr === 12 ? 'Winter' : nr <= 5 ? 'Frühling' : nr <= 8 ? 'Sommer' : 'Herbst');
+const anker = (name: string) => name.toLowerCase();
+---
+<Base title="Gartenkalender" description="Was ist wann im Garten dran? Rasen, Hecke, Laub und Beete Monat für Monat – mit den gesetzlichen Schnittzeiten für Hecken.">
+  <div class="container">
+    <header class="page-head">
+      <p class="eyebrow">Gartenkalender</p>
+      <h1 class="h1">Was ist wann dran?</h1>
+      <p class="lead text-max">Monat für Monat die wichtigsten Arbeiten in Ihrem Garten. Wählen Sie einen Monat, der aktuelle ist voreingestellt.</p>
+    </header>
+
+    <!-- Ohne JavaScript: Sprunglinks und alle Monate untereinander. Mit JavaScript: Reiter, ein Monat sichtbar. -->
+    <nav aria-label="Monat wählen">
+      <div class="kal-leiste" data-kal-leiste>
+        {gartenkalender.map((m) => (
+          <a href={`#${anker(m.name)}`} aria-label={m.name} data-leiste-monat={m.nr}>{m.name.slice(0, 3)}</a>
+        ))}
+      </div>
+    </nav>
+
+    <div class="kal-karte">
+      <ol class="kalender">
+        {gartenkalender.map((m) => (
+          <li class="kal-monat" id={anker(m.name)} data-kalender-monat={m.nr} aria-labelledby={`${anker(m.name)}-titel`}>
+            <div class="kal-kopf">
+              <p class="eyebrow">{jahreszeit(m.nr)}</p>
+              <h2 class="h2" id={`${anker(m.name)}-titel`}>{m.name}</h2>
+              <span class="badge" hidden data-badge>Jetzt</span>
+            </div>
+            <ul class="kal-arbeiten">
+              {m.arbeiten.map((a) => {
+                const l = leistung(a.leistung);
+                return (
+                  <li class="kal-arbeit">
+                    <h3>{a.titel}</h3>
+                    <p>{a.text}</p>
+                    {l && <span class="kal-tag">{l.kurz}</span>}
+                  </li>
+                );
+              })}
+            </ul>
+          </li>
+        ))}
+      </ol>
+
+      <div class="kal-fuss">
+        <div class="kal-blaettern" hidden data-blaettern>
+          <button type="button" class="btn btn--secondary btn--sm" data-zurueck>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            <span data-zurueck-name></span>
+          </button>
+          <button type="button" class="btn btn--secondary btn--sm" data-weiter>
+            <span data-weiter-name></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        </div>
+        <div class="kal-aufruf">
+          <p>Steht das bei Ihnen an? Ich übernehme das gern.</p>
+          <a class="btn btn--primary btn--sm" href="#kontakt">Unverbindlich anfragen</a>
+        </div>
+      </div>
+    </div>
+
+    <aside class="note stack" style="gap: var(--space-2); margin-top: var(--space-12)" aria-label="Hinweis zum Heckenschnitt">
+      <p class="h4">Gut zu wissen: Hecken schneiden ist nicht immer erlaubt.</p>
+      <p>Vom 1. März bis 30. September ist ein starker Rückschnitt von Hecken und Sträuchern verboten (§ 39 Bundesnaturschutzgesetz). Schonende Form- und Pflegeschnitte sind erlaubt – aber nur, wenn keine Vögel darin brüten.</p>
+    </aside>
+
+    <p class="muted" style="margin-top: var(--space-8)">Alle Angaben sind Richtwerte für {firma.gebiet}. Je nach Wetter verschiebt sich die Gartensaison um ein paar Wochen. Was ich im Einzelnen übernehme, steht unter <a href="/leistungen">Leistungen</a>.</p>
+  </div>
+</Base>
+
+<script>
+  const jetzt = new Date().getMonth() + 1;
+  const leiste = document.querySelector<HTMLElement>('[data-kal-leiste]');
+  const tabs = [...document.querySelectorAll<HTMLAnchorElement>('[data-leiste-monat]')];
+  const monate = [...document.querySelectorAll<HTMLElement>('[data-kalender-monat]')];
+  const blaettern = document.querySelector<HTMLElement>('[data-blaettern]');
+  const zurueckName = document.querySelector<HTMLElement>('[data-zurueck-name]');
+  const weiterName = document.querySelector<HTMLElement>('[data-weiter-name]');
+  const name = (nr: number) => monate[nr - 1]?.querySelector('h2')?.textContent ?? '';
+  const nachbar = (nr: number, schritt: number) => ((nr - 1 + schritt + 12) % 12) + 1;
+
+  // Aktuellen Monat markieren, auch wenn die Seite in einem anderen Monat gebaut wurde.
+  tabs[jetzt - 1]?.setAttribute('aria-current', 'date');
+  const badge = monate[jetzt - 1]?.querySelector<HTMLElement>('[data-badge]');
+  if (badge) badge.hidden = false;
+
+  if (leiste && tabs.length === 12 && monate.length === 12 && blaettern) {
+    let gewaehlt = jetzt;
+
+    const waehle = (nr: number, fokus = false, merken = false) => {
+      gewaehlt = nr;
+      tabs.forEach((t, i) => {
+        const an = i + 1 === nr;
+        t.setAttribute('aria-selected', String(an));
+        t.tabIndex = an ? 0 : -1;
+      });
+      monate.forEach((m, i) => (m.hidden = i + 1 !== nr));
+      if (zurueckName) zurueckName.textContent = name(nachbar(nr, -1));
+      if (weiterName) weiterName.textContent = name(nachbar(nr, 1));
+      if (fokus) tabs[nr - 1].focus();
+      // Adresse anpassen, damit sich ein Monat verlinken lässt (z. B. /gartenkalender#mai).
+      if (merken) history.replaceState(null, '', `#${monate[nr - 1].id}`);
+    };
+
+    leiste.setAttribute('role', 'tablist');
+    leiste.setAttribute('aria-label', 'Monate');
+    tabs.forEach((t, i) => {
+      t.setAttribute('role', 'tab');
+      t.id = `kal-reiter-${i + 1}`;
+      t.setAttribute('aria-controls', monate[i].id);
+      monate[i].setAttribute('role', 'tabpanel');
+      t.addEventListener('click', (e) => {
+        e.preventDefault();
+        waehle(i + 1, false, true);
+      });
+    });
+
+    // Pfeiltasten wie bei Reitern üblich.
+    leiste.addEventListener('keydown', (e) => {
+      const ziel = { ArrowRight: nachbar(gewaehlt, 1), ArrowLeft: nachbar(gewaehlt, -1), Home: 1, End: 12 }[e.key];
+      if (!ziel) return;
+      e.preventDefault();
+      waehle(ziel, true, true);
+    });
+
+    document.querySelector('[data-zurueck]')?.addEventListener('click', () => waehle(nachbar(gewaehlt, -1), false, true));
+    document.querySelector('[data-weiter]')?.addEventListener('click', () => waehle(nachbar(gewaehlt, 1), false, true));
+
+    // Sprunglink wie /gartenkalender#mai öffnet diesen Monat, sonst den aktuellen.
+    const ausLink = () => monate.findIndex((m) => `#${m.id}` === decodeURIComponent(location.hash)) + 1;
+    window.addEventListener('hashchange', () => {
+      if (ausLink()) waehle(ausLink());
+    });
+    document.documentElement.classList.add('kal-reiter');
+    blaettern.hidden = false;
+    waehle(ausLink() || jetzt);
+  }
+</script>

@@ -1,0 +1,120 @@
+---
+// Karussell mit Vorher/Nachher-Karten: eine große Karte in der Mitte, links und rechts je eine
+// kleinere, leicht gedrehte. Klick auf eine Seitenkarte, die Pfeile oder die Punkte wechseln.
+// Ohne JavaScript stehen die Karten einfach untereinander.
+import type { ImageMetadata } from 'astro';
+import BeforeAfter from './BeforeAfter.astro';
+
+interface Folie {
+  vorher: ImageMetadata;
+  nachher: ImageMetadata;
+  beschreibung: string;
+  titel: string;
+  meta: string;
+  link: string;
+}
+interface Props {
+  folien: Folie[];
+  label: string;
+}
+const { folien, label } = Astro.props;
+---
+<div class="karussell" role="region" aria-roledescription="Karussell" aria-label={label} data-karussell>
+  <div class="karussell-buehne">
+    {folien.map((f, i) => (
+      <article class="karussell-karte" role="group" aria-roledescription="Folie" aria-label={`${i + 1} von ${folien.length}: ${f.titel}`} data-folie={i}>
+        <BeforeAfter vorher={f.vorher} nachher={f.nachher} beschreibung={f.beschreibung} />
+        <div class="karussell-text">
+          <div>
+            <h3 class="h4">{f.titel}</h3>
+            <p class="meta">{f.meta}</p>
+          </div>
+          <a href={f.link}>Zum Projekt</a>
+        </div>
+      </article>
+    ))}
+  </div>
+  {folien.length > 1 && (
+    <div class="karussell-steuerung" hidden data-steuerung>
+      <button type="button" class="karussell-pfeil" aria-label="Vorheriges Beispiel" data-zurueck>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+      <div class="karussell-punkte">
+        {folien.map((f, i) => (
+          <button type="button" aria-label={`Beispiel ${i + 1}: ${f.titel}`} data-punkt={i}><span></span></button>
+        ))}
+      </div>
+      <button type="button" class="karussell-pfeil" aria-label="Nächstes Beispiel" data-weiter>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+  )}
+  <p class="sr-only" aria-live="polite" data-ansage></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-karussell]').forEach((box) => {
+    const karten = [...box.querySelectorAll<HTMLElement>('[data-folie]')];
+    const punkte = [...box.querySelectorAll<HTMLButtonElement>('[data-punkt]')];
+    const steuerung = box.querySelector<HTMLElement>('[data-steuerung]');
+    const ansage = box.querySelector<HTMLElement>('[data-ansage]');
+    const n = karten.length;
+    if (n < 2 || !steuerung) return;
+    let aktiv = 0;
+
+    const zeige = (index: number, ansagen = false) => {
+      aktiv = (index + n) % n;
+      karten.forEach((k, i) => {
+        const abstand = (i - aktiv + n) % n;
+        const pos = abstand === 0 ? 'mitte' : abstand === 1 ? 'rechts' : abstand === n - 1 ? 'links' : 'aus';
+        k.dataset.pos = pos;
+        const istMitte = pos === 'mitte';
+        // Nur die mittlere Karte ist bedienbar; die anderen holt man per Klick nach vorn.
+        k.setAttribute('aria-hidden', String(!istMitte));
+        k.querySelectorAll<HTMLElement>('input, a').forEach((el) => (el.tabIndex = istMitte ? 0 : -1));
+      });
+      punkte.forEach((p, i) => p.setAttribute('aria-current', String(i === aktiv)));
+      if (ansagen && ansage) ansage.textContent = karten[aktiv].getAttribute('aria-label') ?? '';
+    };
+
+    karten.forEach((k, i) =>
+      k.addEventListener('click', (e) => {
+        if (k.dataset.pos === 'mitte') return;
+        e.preventDefault();
+        zeige(i, true);
+      }),
+    );
+    box.querySelector('[data-zurueck]')?.addEventListener('click', () => zeige(aktiv - 1, true));
+    box.querySelector('[data-weiter]')?.addEventListener('click', () => zeige(aktiv + 1, true));
+    punkte.forEach((p, i) => p.addEventListener('click', () => zeige(i, true)));
+    steuerung.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') zeige(aktiv - 1, true);
+      if (e.key === 'ArrowRight') zeige(aktiv + 1, true);
+    });
+
+    // Wischen auf dem Handy, außer auf dem Foto (dort bewegt man den Regler).
+    let startX: number | null = null;
+    box.addEventListener(
+      'touchstart',
+      (e) => {
+        const auf = (e.target as Element).closest('.ba');
+        startX = auf && auf.closest('[data-pos="mitte"]') ? null : e.touches[0].clientX;
+      },
+      { passive: true },
+    );
+    box.addEventListener(
+      'touchend',
+      (e) => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 50) zeige(aktiv + (dx < 0 ? 1 : -1), true);
+        startX = null;
+      },
+      { passive: true },
+    );
+
+    box.classList.add('ist-aktiv');
+    steuerung.hidden = false;
+    zeige(0);
+  });
+</script>

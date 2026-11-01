@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logo from '../assets/logo/firmenlogo.png';
+import { firma } from '../data/firma';
+
+const pfad = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links = [
+  { href: '/leistungen', text: 'Leistungen' },
+  { href: '/referenzen', text: 'Referenzen' },
+  { href: '/gartenkalender', text: 'Gartenkalender' },
+  { href: '/ueber-mich', text: 'Über mich' },
+];
+---
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/">
+      <Image src={logo} alt={`${firma.name} – ${firma.gebiet}, zur Startseite`} height={60} densities={[1, 2]} loading="eager" />
+    </a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      {links.map((l) => (
+        <a href={l.href} aria-current={pfad === l.href ? 'page' : undefined}>{l.text}</a>
+      ))}
+    </nav>
+    <a class="btn btn--primary btn--sm header-call" href={firma.telefonLink}>
+      <Icon name="telefon" />
+      {firma.telefonAnzeige}
+    </a>
+  </div>
+</header>

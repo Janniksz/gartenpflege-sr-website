@@ -1,0 +1,71 @@
+# Pages CMS (https://pagescms.org): Referenzen im Browser pflegen, ohne Code.
+# Anmelden mit GitHub auf https://app.pagescms.org und dieses Repository öffnen.
+
+media:
+  input: src/content/projekte/bilder
+  output: ./bilder
+  extensions: [jpg, jpeg, png, webp]
+
+content:
+  - name: projekte
+    label: Referenzen
+    type: collection
+    path: src/content/projekte
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{primary}.md"
+    view:
+      fields: [titel, ort, datum]
+    fields:
+      - name: titel
+        label: Titel
+        type: string
+        required: true
+      - name: ort
+        label: Ort (nur grob, keine Adresse)
+        type: string
+        required: true
+        default: Soltau
+      - name: datum
+        label: Datum
+        type: date
+        required: true
+      - name: leistungen
+        label: Leistungen
+        type: select
+        required: true
+        options:
+          multiple: true
+          values:
+            - { name: rasen, label: Rasenmähen }
+            - { name: hecke, label: Hecken- und Formschnitt }
+            - { name: laub, label: Laubentfernung }
+            - { name: gruenschnitt, label: Grünschnitt-Entsorgung }
+            - { name: beete, label: Sträucher und Beete }
+            - { name: weitere, label: Weitere Arbeiten }
+      - name: bilder
+        label: Bildpaare (das erste wird groß gezeigt)
+        type: object
+        list: true
+        required: true
+        fields:
+          - name: vorher
+            label: Vorher-Foto
+            type: image
+            required: true
+          - name: nachher
+            label: Nachher-Foto (gleiche Perspektive)
+            type: image
+            required: true
+          - name: beschreibung
+            label: Kurze Bildbeschreibung (z. B. „Thujahecke an der Straßenseite")
+            type: string
+            required: true
+      - name: entwurf
+        label: Entwurf (noch nicht veröffentlichen)
+        type: boolean
+        default: false
+      - name: body
+        label: Text (zwei bis drei Sätze zum Auftrag)
+        type: rich-text
+        options:
+          format: markdown
