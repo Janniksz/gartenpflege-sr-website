@@ -66,7 +66,7 @@ Hinweis: Die Pages-CMS-Einstellungen sind vorbereitet, aber noch nicht live gete
 
 **Variante B – von Hand:**
 1. Fotos nach `src/content/projekte/bilder/` kopieren, z. B. `heckenschnitt-soltau-vorher-1.jpg` und `...-nachher-1.jpg`.
-2. Eine Datei `src/content/projekte/2026-11-heckenschnitt-soltau.md` anlegen (das Beispielprojekt kopieren und anpassen).
+2. Eine Datei `src/content/projekte/2026-11-heckenschnitt-soltau.md` anlegen (ein vorhandenes Projekt kopieren und anpassen).
 3. Der Dateiname wird zum Sprunglink: `/referenzen#2026-11-heckenschnitt-soltau`.
 
 Jedes Projekt erscheint automatisch auf der Referenzen-Seite und – wenn es zu den drei neuesten gehört – auf der Startseite. Mit `entwurf: true` bleibt es unsichtbar.
@@ -94,7 +94,7 @@ Jedes Projekt erscheint automatisch auf der Referenzen-Seite und – wenn es zu 
 - [ ] Alle Platzhalter in `[eckigen Klammern]` ersetzen (Suche nach `[` im Ordner `src/`)
 - [ ] Name und Foto für „Über mich“, Orte im Einsatzgebiet
 - [ ] Impressum und Datenschutz vervollständigen und prüfen lassen (Hoster eintragen!)
-- [ ] Beispielprojekt und Beispielbilder löschen, echte Projekte anlegen
+- [x] Beispielprojekt und Beispielbilder löschen, echte Projekte anlegen
 - [ ] Fotos durch hochauflösende Originale ersetzen (`src/assets/fotos/`)
 - [ ] Gartenkalender fachlich prüfen
 - [ ] Domain in `astro.config.mjs` und `public/robots.txt`

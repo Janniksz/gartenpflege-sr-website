@@ -74,6 +74,32 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .header-call { order: 2; }
   .nav { order: 3; width: 100%; gap: 0 var(--space-4); }
 }
+/* Menü-Knopf auf schmalen Bildschirmen (nur mit JavaScript, siehe Header.astro) */
+.menue-knopf { display: none; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4); border: 1.5px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); color: var(--forest); font: 600 15px/1 var(--font-sans); cursor: pointer; }
+.menue-knopf:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.menue-knopf svg { width: 20px; height: 20px; }
+.menue-knopf path { transition: transform 0.25s ease, opacity 0.2s ease; transform-origin: 12px 12px; }
+.ist-offen .menue-strich-1 { transform: translateY(5px) rotate(45deg); }
+.ist-offen .menue-strich-2 { opacity: 0; }
+.ist-offen .menue-strich-3 { transform: translateY(-5px) rotate(-45deg); }
+@media (max-width: 860px) {
+  .menue-aktiv .menue-knopf { display: inline-flex; order: 2; margin-left: auto; }
+  .menue-aktiv .nav { display: none; }
+  .menue-aktiv .ist-offen .nav { display: flex; flex-direction: column; order: 4; width: 100%; padding-bottom: var(--space-2); }
+  .menue-aktiv .ist-offen .nav a { line-height: 1.3; padding-block: var(--space-4); font-size: 18px; border-top: 1px solid var(--line); }
+  .menue-aktiv .ist-offen .nav a[aria-current='page'] { text-decoration: none; }
+}
+/* Auf dem Handy übernimmt die Anruf-Leiste unten den Anruf-Knopf. */
+@media (max-width: 760px) { .header-call { display: none; } }
+
+/* Anruf-Leiste unten auf dem Handy (components/AnrufLeiste.astro) */
+.anruf-leiste { display: none; }
+@media (max-width: 760px) {
+  .anruf-leiste { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); position: fixed; inset: auto 0 0 0; z-index: 6; padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--line); box-shadow: var(--shadow-card); transition: transform 0.3s ease; }
+  .anruf-leiste.ist-versteckt { transform: translateY(110%); }
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .anruf-leiste, .menue-knopf path { transition: none; } }
 
 /* Hero */
 /* Erster Bildschirm der Startseite: Hero + Leistungen füllen zusammen die Bildschirmhöhe.
@@ -185,18 +211,35 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .filter { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-12); }
 .filter button { min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-full); border: 1.5px solid var(--line); background: var(--surface-raised); color: var(--ink); font: 600 15px/1 var(--font-sans); cursor: pointer; }
 .filter button[aria-pressed='true'] { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
-.projects { display: grid; gap: var(--space-16); }
-.project { display: grid; gap: var(--space-6); scroll-margin-top: var(--space-24); }
+/* Projekt als Karte: links die Regler, rechts die Angaben; auf dem Handy untereinander. */
+.projects { display: grid; gap: var(--space-8); padding-bottom: var(--space-16); }
+.project { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-8); align-items: start; background: var(--surface-raised); border-radius: var(--radius-lg); padding: var(--space-4); box-shadow: var(--shadow-card); scroll-margin-top: var(--space-24); }
+.project:target { box-shadow: 0 0 0 2px var(--moss), var(--shadow-card); }
 .project[hidden] { display: none; }
-.project-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-6); }
+.project-bilder { display: grid; gap: var(--space-4); }
+.project-info { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-4) 0; }
+@media (max-width: 860px) {
+  .project { grid-template-columns: 1fr; gap: var(--space-4); padding: var(--space-3); }
+  .project-info { padding: var(--space-2) var(--space-3) var(--space-3); }
+}
 .project-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; padding: 0; }
 .project-tags li { font-size: 13px; font-weight: 600; color: var(--forest); background: var(--sprout-soft); padding: 2px var(--space-3); border-radius: var(--radius-full); }
 .project-body { max-width: var(--text-max); color: var(--ink-muted); }
-.project details summary { cursor: pointer; font-weight: 600; color: var(--moss); padding-block: var(--space-2); }
-.project details[open] summary { margin-bottom: var(--space-4); }
-.project-more { display: grid; gap: var(--space-6); }
-.share { font-size: 14px; }
+.project-more { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+@media (max-width: 560px) { .project-more { grid-template-columns: 1fr; } }
+.share { margin-top: auto; }
+.share a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; font-size: 14px; font-weight: 600; }
+.share svg { width: 18px; height: 18px; }
 .empty { padding: var(--space-8); border: 1.5px dashed var(--line); border-radius: var(--radius-md); color: var(--ink-muted); text-align: center; }
+
+/* 404-Seite: Text und Bild wie im Hero, darunter vier Wegweiser-Karten */
+.fehler { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: var(--space-12); align-items: center; padding-block: var(--space-16) var(--space-12); }
+.fehler-bild { max-width: 400px; justify-self: center; }
+.wegweiser { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: var(--space-4); padding-bottom: var(--space-16); }
+.wegweiser a { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-6); background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); color: var(--ink); text-decoration: none; transition: border-color 0.2s ease, transform 0.2s ease; }
+.wegweiser a:hover { border-color: var(--moss); transform: translateY(-2px); }
+.wegweiser a:hover .h4 { color: var(--moss); }
+@media (prefers-reduced-motion: reduce) { .wegweiser a { transition: none; } .wegweiser a:hover { transform: none; } }
 
 /* Vorher/Nachher-Regler */
 .ba { position: relative; overflow: hidden; border-radius: var(--radius-md); aspect-ratio: 4 / 3; background: var(--surface-sunken); --pos: 50%; user-select: none; }

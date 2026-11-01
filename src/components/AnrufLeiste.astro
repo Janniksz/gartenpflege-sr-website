@@ -1,0 +1,21 @@
+---
+// Feste Leiste unten auf dem Handy: Anrufen und WhatsApp sind immer einen Daumen entfernt.
+// Sie verschwindet, solange das Kontaktband im Bild ist, damit die Knöpfe nicht doppelt erscheinen.
+import Icon from './Icon.astro';
+import { firma } from '../data/firma';
+---
+<aside class="anruf-leiste" aria-label="Schnellkontakt" data-anruf-leiste>
+  <a class="btn btn--primary" href={firma.telefonLink}><Icon name="telefon" />Anrufen</a>
+  <a class="btn btn--secondary" href={firma.whatsappLink}><Icon name="nachricht" />WhatsApp</a>
+</aside>
+
+<script>
+  const leiste = document.querySelector<HTMLElement>('[data-anruf-leiste]');
+  const kontakt = document.getElementById('kontakt');
+  if (leiste && kontakt && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      leiste.classList.toggle('ist-versteckt', e.isIntersecting);
+      leiste.inert = e.isIntersecting;
+    }).observe(kontakt);
+  }
+</script>

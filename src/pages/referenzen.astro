@@ -11,7 +11,7 @@ const mitInhalt = await Promise.all(projekte.map(async (p) => ({ p, Content: (aw
 
 const datumFormat = new Intl.DateTimeFormat('de-DE', { month: 'long', year: 'numeric' });
 const name = (id: string) => leistungen.find((l) => l.id === id)?.kurz ?? id;
-// Nur Filter anzeigen, für die es Projekte gibt.
+// Filter erst ab vier Projekten und nur für Leistungen, für die es Projekte gibt.
 const filter = leistungen.filter((l) => projekte.some((p) => p.data.leistungen.includes(l.id)));
 ---
 <Base title="Referenzen" description={`Vorher/Nachher-Bilder echter Gartenprojekte in ${firma.gebiet}: Heckenschnitt, Rasen, Laub und Beete.`}>
@@ -26,7 +26,7 @@ const filter = leistungen.filter((l) => projekte.some((p) => p.data.leistungen.i
       <p class="empty">Die ersten Projekte folgen in Kürze.</p>
     ) : (
       <>
-        {filter.length > 1 && (
+        {projekte.length >= 4 && filter.length > 1 && (
           <div class="filter" role="group" aria-label="Projekte nach Leistung filtern" data-filter>
             <button type="button" aria-pressed="true" data-value="alle">Alle</button>
             {filter.map((l) => <button type="button" aria-pressed="false" data-value={l.id}>{l.kurz}</button>)}
@@ -38,26 +38,29 @@ const filter = leistungen.filter((l) => projekte.some((p) => p.data.leistungen.i
             const [erstes, ...weitere] = p.data.bilder;
             return (
               <article class="project" id={p.id} data-leistungen={p.data.leistungen.join(' ')} aria-labelledby={`${p.id}-titel`}>
-                <div class="project-head">
-                  <div class="stack" style="gap: var(--space-1)">
-                    <h2 class="h3" id={`${p.id}-titel`}>{p.data.titel}</h2>
-                    <p class="meta">{p.data.ort} · {datumFormat.format(p.data.datum)}</p>
-                  </div>
-                  <ul class="project-tags" aria-label="Leistungen">
-                    {p.data.leistungen.map((l) => <li>{name(l)}</li>)}
-                  </ul>
-                </div>
-                <BeforeAfter vorher={erstes.vorher} nachher={erstes.nachher} beschreibung={erstes.beschreibung} eager={i === 0} />
-                <div class="project-body"><Content /></div>
-                {weitere.length > 0 && (
-                  <details>
-                    <summary>{weitere.length === 1 ? '1 weiteres Bildpaar' : `${weitere.length} weitere Bildpaare`}</summary>
+                <div class="project-bilder">
+                  <BeforeAfter vorher={erstes.vorher} nachher={erstes.nachher} beschreibung={erstes.beschreibung} eager={i === 0} />
+                  {weitere.length > 0 && (
                     <div class="project-more">
                       {weitere.map((b) => <BeforeAfter vorher={b.vorher} nachher={b.nachher} beschreibung={b.beschreibung} />)}
                     </div>
-                  </details>
-                )}
-                <p class="share"><a href={`#${p.id}`}>Link zu diesem Projekt</a></p>
+                  )}
+                </div>
+                <div class="project-info">
+                  <p class="meta">{p.data.ort} · {datumFormat.format(p.data.datum)}</p>
+                  <h2 class="h3" id={`${p.id}-titel`}>{p.data.titel}</h2>
+                  <ul class="project-tags" aria-label="Leistungen">
+                    {p.data.leistungen.map((l) => <li>{name(l)}</li>)}
+                  </ul>
+                  <div class="project-body"><Content /></div>
+                  {weitere.length > 0 && <p class="meta">{weitere.length + 1} Ansichten – ziehen Sie jeweils den Regler.</p>}
+                  <p class="share">
+                    <a href={`#${p.id}`} data-teilen>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></svg>
+                      <span data-teilen-text>Link kopieren</span>
+                    </a>
+                  </p>
+                </div>
               </article>
             );
           })}
@@ -68,6 +71,22 @@ const filter = leistungen.filter((l) => projekte.some((p) => p.data.leistungen.i
 </Base>
 
 <script>
+  // „Link kopieren": legt den Link zum Projekt in die Zwischenablage. Ohne Zwischenablage springt der Link einfach zum Projekt.
+  document.querySelectorAll<HTMLAnchorElement>('[data-teilen]').forEach((a) => {
+    a.addEventListener('click', async (e) => {
+      if (!navigator.clipboard) return;
+      e.preventDefault();
+      const text = a.querySelector<HTMLElement>('[data-teilen-text]');
+      try {
+        await navigator.clipboard.writeText(new URL(a.getAttribute('href') ?? '', location.href).href);
+        if (text) text.textContent = 'Link kopiert';
+        setTimeout(() => text && (text.textContent = 'Link kopieren'), 2000);
+      } catch {
+        location.hash = a.getAttribute('href') ?? '';
+      }
+    });
+  });
+
   const gruppe = document.querySelector<HTMLElement>('[data-filter]');
   const status = document.querySelector<HTMLElement>('[data-filter-status]');
   if (gruppe) {

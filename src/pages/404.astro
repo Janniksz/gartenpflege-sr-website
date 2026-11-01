@@ -1,13 +1,37 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import hecke from '../assets/fotos/hecke.jpg';
+
+const wege = [
+  { href: '/leistungen', titel: 'Leistungen', text: 'Was ich für Ihren Garten tue.' },
+  { href: '/referenzen', titel: 'Referenzen', text: 'Vorher und nachher.' },
+  { href: '/gartenkalender', titel: 'Gartenkalender', text: 'Was ist wann dran?' },
+  { href: '/ueber-mich', titel: 'Über mich', text: 'Wer hinter Gartenpflege SR steht.' },
+];
 ---
 <Base title="Seite nicht gefunden" description="Diese Seite gibt es nicht." noindex>
   <div class="container">
-    <header class="page-head">
-      <p class="eyebrow">Fehler 404</p>
-      <h1 class="h1">Hier wächst leider nichts.</h1>
-      <p class="lead">Die Seite gibt es nicht oder nicht mehr.</p>
-      <p><a class="btn btn--primary" href="/">Zur Startseite</a></p>
-    </header>
+    <section class="fehler" aria-labelledby="fehler-titel">
+      <div class="stack">
+        <p class="eyebrow">Fehler 404</p>
+        <h1 class="h1" id="fehler-titel">Hier wächst leider nichts.</h1>
+        <p class="lead">Die Seite gibt es nicht oder nicht mehr. Vielleicht hilft einer dieser Wege weiter.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="/">Zur Startseite</a>
+          <a class="btn btn--secondary" href="#kontakt">Direkt anfragen</a>
+        </div>
+      </div>
+      <Image class="arch fehler-bild" src={hecke} alt="Hecke wird mit der Heckenschere in Form geschnitten" widths={[477]} sizes="400px" loading="eager" />
+    </section>
+
+    <nav class="wegweiser" aria-label="Wegweiser">
+      {wege.map((w) => (
+        <a href={w.href}>
+          <span class="h4">{w.titel}</span>
+          <span class="muted">{w.text}</span>
+        </a>
+      ))}
+    </nav>
   </div>
 </Base>

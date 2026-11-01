@@ -12,12 +12,19 @@ const links = [
   { href: '/ueber-mich', text: 'Über mich' },
 ];
 ---
-<header class="site-header">
+<header class="site-header" data-kopf>
   <div class="container">
     <a class="logo" href="/">
       <Image src={logo} alt={`${firma.name} – ${firma.gebiet}, zur Startseite`} height={60} densities={[1, 2]} loading="eager" />
     </a>
-    <nav class="nav" aria-label="Hauptnavigation">
+    <!-- Nur auf schmalen Bildschirmen und mit JavaScript sichtbar; ohne JavaScript steht das Menü ausgeklappt da. -->
+    <button type="button" class="menue-knopf" aria-expanded="false" aria-controls="hauptmenue" hidden data-menue-knopf>
+      <span data-menue-text>Menü</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path class="menue-strich-1" d="M4 7h16" /><path class="menue-strich-2" d="M4 12h16" /><path class="menue-strich-3" d="M4 17h16" />
+      </svg>
+    </button>
+    <nav class="nav" id="hauptmenue" aria-label="Hauptnavigation">
       {links.map((l) => (
         <a href={l.href} aria-current={pfad === l.href ? 'page' : undefined}>{l.text}</a>
       ))}
@@ -28,3 +35,28 @@ const links = [
     </a>
   </div>
 </header>
+
+<script>
+  const kopf = document.querySelector<HTMLElement>('[data-kopf]');
+  const knopf = document.querySelector<HTMLButtonElement>('[data-menue-knopf]');
+  const text = document.querySelector<HTMLElement>('[data-menue-text]');
+  if (kopf && knopf) {
+    const setze = (offen: boolean) => {
+      kopf.classList.toggle('ist-offen', offen);
+      knopf.setAttribute('aria-expanded', String(offen));
+      if (text) text.textContent = offen ? 'Schließen' : 'Menü';
+    };
+    knopf.hidden = false;
+    document.documentElement.classList.add('menue-aktiv');
+    knopf.addEventListener('click', () => setze(!kopf.classList.contains('ist-offen')));
+    // Escape schließt das Menü und gibt den Fokus an den Knopf zurück.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && kopf.classList.contains('ist-offen')) {
+        setze(false);
+        knopf.focus();
+      }
+    });
+    // Bei einem Klick auf einen Link (auch Sprunglinks) wieder schließen.
+    kopf.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => setze(false)));
+  }
+</script>

@@ -5,8 +5,10 @@ export const firma = {
   gebiet: 'Soltau & Umgebung',
   telefonAnzeige: '0151 70022945',
   telefonLink: 'tel:+4915170022945',
-  whatsappLink: 'https://wa.me/4915170022945',
+  // WhatsApp und E-Mail öffnen mit vorausgefülltem Text bzw. Betreff (Text hier anpassen).
+  whatsappLink: `https://wa.me/4915170022945?text=${encodeURIComponent('Hallo, ich habe eine Anfrage zur Gartenpflege: ')}`,
   email: 'gartenpflegesr@gmail.com',
+  emailLink: `mailto:gartenpflegesr@gmail.com?subject=${encodeURIComponent('Anfrage Gartenpflege')}`,
   inhaber: 'Robin Stocker',
   anschrift: { strasse: 'Nickelstraße 22', plz: '29614', ort: 'Soltau' },
   // Einsatzgebiet: Soltau und die direkte Umgebung.
