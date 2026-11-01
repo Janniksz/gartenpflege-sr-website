@@ -102,14 +102,14 @@ export const gartenkalender: Monat[] = [
     name: 'November',
     arbeiten: [
       { titel: 'Laub und Grünschnitt wegbringen', text: 'Gehäckseltes Material und Laub, das nicht als Winterschutz bleibt, fachgerecht entsorgen.', leistung: 'gruenschnitt' },
-      { titel: 'Beete winterfest machen', text: 'Empfindliche Pflanzen mit Laub oder Reisig abdecken.', leistung: 'beete' },
+      { titel: 'Hecken kräftig zurückschneiden', text: 'Die Pflanzen ruhen, und ein starker Rückschnitt ist wieder erlaubt. Ideal, wenn die Hecke deutlich kleiner werden soll.', leistung: 'hecke' },
     ],
   },
   {
     nr: 12,
     name: 'Dezember',
     arbeiten: [
-      { titel: 'Schneelast abschütteln', text: 'Schwerer Schnee kann Äste von Hecken und Formgehölzen brechen.', leistung: 'hecke' },
+      { titel: 'Letztes Laub entfernen', text: 'Spätes Laub auf Rasen und Wegen wegräumen, damit darunter nichts fault.', leistung: 'laub' },
       { titel: 'Das neue Gartenjahr planen', text: 'Was soll im Frühjahr passieren? Jetzt ist Zeit für eine Anfrage.' },
     ],
   },

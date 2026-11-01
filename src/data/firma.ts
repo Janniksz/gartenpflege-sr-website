@@ -12,7 +12,7 @@ export const firma = {
   inhaber: 'Robin Stocker',
   anschrift: { strasse: 'Nickelstraße 22', plz: '29614', ort: 'Soltau' },
   // Einsatzgebiet: Soltau und die direkte Umgebung.
-  orte: ['Soltau'],
+  orte: ['Soltau', 'Munster', 'Bispingen', 'Wietzendorf', 'Neuenkirchen', 'Schneverdingen'],
   // Social-Media-Profile. Vollständige Adresse eintragen (beginnt mit https://),
   // dann erscheint im Footer automatisch das Icon als Link. Solange [eckige Klammern] drinstehen, ein Platzhalter.
   social: [

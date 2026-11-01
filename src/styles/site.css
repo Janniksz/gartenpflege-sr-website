@@ -216,7 +216,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .about .placeholder { aspect-ratio: 4 / 5; max-width: 360px; }
 .about-foto { width: 100%; max-width: 360px; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 30%; border-radius: var(--radius-full) var(--radius-full) var(--radius-sm) var(--radius-sm); }
 .places { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; padding: 0; }
-.places li { padding: var(--space-1) var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); font-size: 15px; }
+.places li { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); font-size: 16px; font-weight: 600; }
+.places li::before { content: ''; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--leaf); }
 
 /* Leistungen-Seite */
 .page-head { padding-block: var(--space-16) var(--space-12); display: flex; flex-direction: column; gap: var(--space-4); }
@@ -336,7 +337,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .kal-leiste { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--space-2); margin-bottom: var(--space-6); }
 .kal-leiste a { display: grid; place-items: center; min-height: 44px; border: 1.5px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); color: var(--ink); font-size: 15px; font-weight: 600; text-decoration: none; }
 .kal-leiste a:hover { border-color: var(--moss); color: var(--moss); }
-.kal-leiste a[aria-current] { border-color: var(--moss); color: var(--moss); }
+/* Aktueller Monat: hellgrün wie die Etiketten und etwas größer; ist er gewählt, wird er dunkelgrün. */
+.kal-leiste a { transition: transform 0.2s ease, background 0.2s ease; }
+.kal-leiste a[aria-current] { position: relative; z-index: 1; transform: scale(1.12); background: var(--sprout-soft); border-color: var(--sprout); color: var(--forest); font-weight: 700; }
 .kal-leiste a[aria-selected='true'] { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
 @media (max-width: 700px) { .kal-leiste { grid-template-columns: repeat(6, 1fr); } }
 /* Karte mit dem gewählten Monat */
@@ -352,6 +355,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 @keyframes kal-ein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .kal-reiter .kal-monat.ist-gewaehlt { animation: kal-ein 0.3s ease-out; }
 .kal-kopf { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+/* Monatsname im Gartenkalender groß und grün, damit sofort klar ist, welcher Monat gezeigt wird. */
+.kal-monat .kal-kopf .h2 { font-size: 52px; line-height: 1; color: var(--moss); }
+/* Breitere linke Spalte, damit auch „September“ Platz hat; fest, damit nichts beim Blättern springt. */
+@media (min-width: 761px) { .kalender .kal-monat { grid-template-columns: 320px 1fr; } }
+@media (max-width: 700px) { .kal-monat .kal-kopf .h2 { font-size: 44px; } }
 .kal-arbeiten { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-8); align-content: start; }
 .kal-arbeit { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
 .kal-arbeit h3 { font-size: 17px; line-height: 24px; font-weight: 600; }
@@ -432,10 +440,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   .card:hover img { transform: none; }
 }
 
+.kal-leiste a:active { transform: scale(0.97); }
+.kal-leiste a[aria-current]:active { transform: scale(1.08); }
 /* Rückmeldung beim Antippen: Knöpfe und Kacheln geben leicht nach (statt des grauen Standard-Blitzes). */
 a, button, summary { -webkit-tap-highlight-color: transparent; }
 .btn, .kachel, .wegweiser a, .kal-leiste a, .schnellnav a, .karussell-pfeil, .menue-knopf, .ba-gross, .social a, .filter button { transition-property: transform, background, border-color, color, box-shadow; transition-duration: 0.12s; }
-.btn:active, .kachel:active, .wegweiser a:active, .kal-leiste a:active, .schnellnav a:active, .karussell-pfeil:active, .menue-knopf:active, .ba-gross:active, .social a:active, .filter button:active { transform: scale(0.97); }
+.btn:active, .kachel:active, .wegweiser a:active, .schnellnav a:active, .karussell-pfeil:active, .menue-knopf:active, .ba-gross:active, .social a:active, .filter button:active { transform: scale(0.97); }
 
 /* Weiche Seitenübergänge zwischen den Seiten (vom Browser, ohne Skript).
    Kopfzeile und Anruf-Leiste bleiben dabei stehen, nur der Inhalt blendet über. */

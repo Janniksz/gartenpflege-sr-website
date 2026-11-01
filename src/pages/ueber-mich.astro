@@ -19,7 +19,7 @@ import foto from '../assets/fotos/robin-stocker.jpg';
       <div class="stack">
         <h2 class="h3" id="person-titel">Ich bin {firma.inhaber}.</h2>
         <p>Ich wohne in Soltau und kümmere mich mit Leidenschaft um Gärten in der Region. Ob Rasen, Hecke oder Beet: Ich packe gerne mit an.</p>
-        <p>[Ein bis zwei Sätze: Was mir bei der Arbeit wichtig ist.]</p>
+        <p>Bei der Arbeit sind mir zwei Dinge besonders wichtig: Sauberkeit und Ihre Zufriedenheit. Ich hinterlasse Ihren Garten so ordentlich, wie ich ihn mir selbst wünschen würde. Und ich bin erst fertig, wenn Sie mit dem Ergebnis zufrieden sind.</p>
       </div>
     </section>
   </div>
@@ -41,7 +41,10 @@ import foto from '../assets/fotos/robin-stocker.jpg';
     <div class="container stack">
       <p class="eyebrow">Einsatzgebiet</p>
       <h2 class="h2" id="gebiet-titel">In {firma.gebiet} für Sie da.</h2>
-      <p class="lead text-max">Ich bin in Soltau und der direkten Umgebung unterwegs. Sie wohnen etwas weiter weg? Fragen Sie einfach nach.</p>
+      <ul class="places" aria-label="Orte im Einsatzgebiet">
+        {firma.orte.map((o) => <li>{o}</li>)}
+      </ul>
+      <p class="muted">Ihr Ort ist nicht dabei? Fragen Sie einfach nach.</p>
     </div>
   </section>
 </Base>

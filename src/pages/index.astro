@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import Karussell from '../components/Karussell.astro';
 import { firma, leistungen } from '../data/firma';
 import { gartenkalender, saisonHinweise } from '../data/gartenkalender';
-import garten from '../assets/fotos/garten.jpg';
+import garten from '../assets/fotos/garten-kirschbluete.jpg';
 import foto from '../assets/fotos/robin-stocker.jpg';
 
 const projekte = (await getCollection('projekte', ({ data }) => !data.entwurf)).sort(
@@ -48,7 +48,7 @@ const buildMonat = new Date().getMonth() + 1;
           <a class="btn btn--secondary" href="/leistungen">Leistungen ansehen</a>
         </div>
       </div>
-      <Picture class="arch" src={garten} formats={['avif', 'webp']} alt="Gepflegter Garten mit Rasen, Hecken und blühenden Hortensien" widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 540px" loading="eager" fetchpriority="high" />
+      <Picture class="arch" src={garten} formats={['avif', 'webp']} alt="Blühender Zierkirschbaum über einem gepflegten Rasen mit Trittplatten und Hecke" widths={[480, 800, 1200]} sizes="(max-width: 760px) 100vw, 540px" loading="eager" fetchpriority="high" />
     </section>
   </div>
 
@@ -149,7 +149,10 @@ const buildMonat = new Date().getMonth() + 1;
       <p class="eyebrow">Einsatzgebiet</p>
       <h2 class="h2" id="gebiet-titel">In {firma.gebiet} für Sie da.</h2>
     </div>
-    <p class="lead text-max">Ich bin in Soltau und der direkten Umgebung unterwegs. Sie wohnen etwas weiter weg? Fragen Sie einfach nach.</p>
+    <ul class="places" aria-label="Orte im Einsatzgebiet">
+      {firma.orte.map((o) => <li>{o}</li>)}
+    </ul>
+    <p class="muted" style="margin-top: var(--space-4)">Ihr Ort ist nicht dabei? Fragen Sie einfach nach.</p>
   </section>
 </Base>
 
