@@ -3,7 +3,6 @@ import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { firma } from '../data/firma';
-import foto from '../assets/fotos/robin-stocker.jpg';
 ---
 <Base title="Über mich" description={`${firma.inhaber} von ${firma.name}: Ihr Ansprechpartner für Gartenpflege in ${firma.gebiet}.`}>
   <div class="seite-start">
@@ -14,7 +13,7 @@ import foto from '../assets/fotos/robin-stocker.jpg';
     </header>
 
     <section class="about" aria-labelledby="person-titel">
-      <Picture class="about-foto" src={foto} formats={['avif', 'webp']} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
+      {/* OFFEN: Neues Foto von Robin kommt noch. Bild nach src/assets/fotos/ legen und hier wieder <Picture class="about-foto" … /> einfügen. */}
       <div class="stack">
         <h2 class="h3" id="person-titel">Ich bin {firma.inhaber}.</h2>
         <p>Für Gärten begeistere ich mich, seit ich denken kann. Als ich älter wurde, habe ich angefangen, mich um unseren eigenen Garten zu kümmern. Rasen mähen, Hecken schneiden, Beete pflegen: Ich habe schnell gemerkt, wie viel Freude es macht, am Ende des Tages zu sehen, was man geschafft hat.</p>

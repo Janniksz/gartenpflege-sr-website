@@ -217,6 +217,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .placeholder { display: grid; place-items: center; text-align: center; padding: var(--space-6); background: var(--sprout-soft); color: var(--forest); border: 1.5px dashed var(--moss); border-radius: var(--radius-md); font-weight: 600; }
 .about { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-12); align-items: center; }
 .about .placeholder { aspect-ratio: 4 / 5; max-width: 360px; }
+/* Solange kein Foto da ist: Text in angenehmer Zeilenbreite statt über die ganze Seite. */
+.about:not(:has(.about-foto)) { display: block; }
+.about:not(:has(.about-foto)) > .stack { max-width: var(--text-max); }
 .about-foto { width: 100%; max-width: 360px; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 30%; border-radius: var(--radius-full) var(--radius-full) var(--radius-sm) var(--radius-sm); }
 .places { display: flex; flex-wrap: wrap; gap: var(--space-2); list-style: none; padding: 0; }
 .places li { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-full); background: var(--surface-raised); font-size: 16px; font-weight: 600; }

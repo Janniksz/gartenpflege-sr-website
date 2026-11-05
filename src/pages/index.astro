@@ -1,5 +1,5 @@
 ---
-import { Image, Picture } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -7,7 +7,6 @@ import Karussell from '../components/Karussell.astro';
 import { firma, leistungen } from '../data/firma';
 import { gartenkalender, saisonHinweise } from '../data/gartenkalender';
 import garten from '../assets/fotos/garten-kirschbluete.jpg';
-import foto from '../assets/fotos/robin-stocker.jpg';
 
 const projekte = (await getCollection('projekte', ({ data }) => !data.entwurf)).sort(
   (a, b) => b.data.datum.valueOf() - a.data.datum.valueOf(),
@@ -134,7 +133,7 @@ const buildMonat = new Date().getMonth() + 1;
 
   <section class="section section--sunken" aria-labelledby="ueber-titel">
     <div class="container about">
-      <Picture class="about-foto" src={foto} formats={['avif', 'webp']} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
+      {/* OFFEN: Neues Foto von Robin kommt noch. Bild nach src/assets/fotos/ legen und hier wieder <Picture class="about-foto" … /> einfügen. */}
       <div class="stack">
         <p class="eyebrow">Über mich</p>
         <h2 class="h2" id="ueber-titel">Ihr Ansprechpartner: {firma.inhaber}.</h2>
