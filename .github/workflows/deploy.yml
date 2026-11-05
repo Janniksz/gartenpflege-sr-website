@@ -34,4 +34,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ./httpdocs/ # Website-Ordner bei netcup
+          server-dir: ./gartenpflege-sr.de/httpdocs/ # Website-Ordner bei netcup
