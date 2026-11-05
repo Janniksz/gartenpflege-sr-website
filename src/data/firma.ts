@@ -7,14 +7,14 @@ export const firma = {
   telefonLink: 'tel:+4915170022945',
   // WhatsApp und E-Mail öffnen mit vorausgefülltem Text bzw. Betreff (Text hier anpassen).
   whatsappLink: `https://wa.me/4915170022945?text=${encodeURIComponent('Hallo, ich habe eine Anfrage zur Gartenpflege: ')}`,
-  email: 'gartenpflegesr@gmail.com',
-  emailLink: `mailto:gartenpflegesr@gmail.com?subject=${encodeURIComponent('Anfrage Gartenpflege')}`,
+  email: 'kontakt@gartenpflege-sr.de',
+  emailLink: `mailto:kontakt@gartenpflege-sr.de?subject=${encodeURIComponent('Anfrage Gartenpflege')}`,
   inhaber: 'Robin Stocker',
   anschrift: { strasse: 'Nickelstraße 22', plz: '29614', ort: 'Soltau' },
   // Einsatzgebiet: Soltau und die direkte Umgebung.
   orte: ['Soltau', 'Munster', 'Bispingen', 'Wietzendorf', 'Neuenkirchen', 'Schneverdingen'],
   // Social-Media-Profile. Vollständige Adresse eintragen (beginnt mit https://),
-  // dann erscheint im Footer automatisch das Icon als Link. Solange [eckige Klammern] drinstehen, ein Platzhalter.
+  // dann erscheint im Footer automatisch das Icon als Link. Solange [eckige Klammern] drinstehen, wird es nicht angezeigt.
   social: [
     // Geplant: https://www.instagram.com/gartenpflege.sr – erst eintragen, wenn es das Konto gibt.
     { id: 'instagram', name: 'Instagram', url: '[INSTAGRAM-LINK]' },

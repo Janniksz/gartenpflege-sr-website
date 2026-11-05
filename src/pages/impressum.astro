@@ -8,8 +8,6 @@ import { firma } from '../data/firma';
       <h1 class="h1">Impressum</h1>
     </header>
     <div class="legal">
-      <p class="warn">Vorlage: Alle Angaben in [eckigen Klammern] ergänzen und vor der Veröffentlichung prüfen, z. B. mit einem Impressum-Generator oder durch einen Anwalt.</p>
-
       <h2>Angaben gemäß § 5 DDG</h2>
       <p>
         {firma.inhaber}<br />
@@ -24,8 +22,10 @@ import { firma } from '../data/firma';
         E-Mail: <a href={`mailto:${firma.email}`}>{firma.email}</a>
       </p>
 
-      <h2>Umsatzsteuer</h2>
-      <p>[Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG, falls vorhanden – sonst diesen Abschnitt löschen.]</p>
+      {/* OFFEN: Umsatzsteuer-ID liefert Robin nach. Dann hier wieder einfügen:
+          <h2>Umsatzsteuer</h2>
+          <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE…</p>
+          Gibt es keine USt-ID (z. B. Kleinunternehmer), bleibt der Abschnitt weg. */}
 
       <h2>Verantwortlich für den Inhalt</h2>
       <p>{firma.inhaber}, Anschrift wie oben.</p>

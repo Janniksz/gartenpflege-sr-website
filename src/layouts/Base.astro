@@ -21,6 +21,9 @@ const { title, description, kontakt = true, noindex = false } = Astro.props;
 const fullTitle = Astro.url.pathname === '/' ? `${firma.name} – Gartenpflege in ${firma.gebiet}` : `${title} | ${firma.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
+// Social-Media-Profile mit echter Adresse; Platzhalter in firma.ts werden nicht angezeigt.
+const profile = firma.social.filter((s) => s.url.startsWith('http'));
+
 // Strukturierte Daten für Google (lokales Unternehmen).
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -39,7 +42,7 @@ const jsonLd = {
     addressCountry: 'DE',
   },
   areaServed: firma.orte.filter((o) => !o.startsWith('[')),
-  sameAs: firma.social.map((s) => s.url).filter((u) => u.startsWith('http')),
+  sameAs: profile.map((s) => s.url),
 };
 ---
 <!doctype html>
@@ -101,18 +104,16 @@ const jsonLd = {
             <li><a href={firma.emailLink}><Icon name="mail" />{firma.email}</a></li>
           </ul>
         </div>
-        <div>
-          <p class="footer-titel">Folgen</p>
-          <ul class="social" aria-label="Social Media">
-          {firma.social.map((s) =>
-            s.url.startsWith('http') ? (
-              <li><a href={s.url} target="_blank" rel="noopener" aria-label={`${firma.name} auf ${s.name}`}><Icon name={s.id} /></a></li>
-            ) : (
-              <li><span class="social-platzhalter"><Icon name={s.id} />{s.url}</span></li>
-            ),
-          )}
-          </ul>
-        </div>
+        {profile.length > 0 && (
+          <div>
+            <p class="footer-titel">Folgen</p>
+            <ul class="social" aria-label="Social Media">
+              {profile.map((s) => (
+                <li><a href={s.url} target="_blank" rel="noopener" aria-label={`${firma.name} auf ${s.name}`}><Icon name={s.id} /></a></li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div class="container footer-unten">
         <p>© {new Date().getFullYear()} {firma.name}</p>

@@ -42,7 +42,7 @@ const details = [
     id: 'beete',
     titel: 'Pflege von Sträuchern und Beeten',
     text: 'Damit Beete und Sträucher schön bleiben, brauchen sie regelmäßig etwas Aufmerksamkeit.',
-    dazu: 'Unkraut jäten, Verblühtes entfernen, Sträucher schneiden und auslichten, Beete im Herbst winterfest machen.',
+    dazu: 'Unkraut jäten, Verblühtes entfernen, Sträucher schneiden und auslichten.',
     zeit: 'März bis November.',
     preis: '',
   },
@@ -50,8 +50,8 @@ const details = [
     id: 'weitere',
     titel: 'Weitere Gartenarbeiten auf Anfrage',
     text: 'Etwas anderes zu tun? Sprechen Sie mich an – vieles lässt sich einrichten.',
-    dazu: '[Beispiele ergänzen, die wirklich angeboten werden.]',
-    zeit: 'Nach Absprache.',
+    dazu: '',
+    zeit: '',
     preis: '',
   },
 ];
@@ -77,13 +77,15 @@ const details = [
       <section class="service-detail" id={d.id} aria-labelledby={`${d.id}-titel`}>
         <h2 class="h4" id={`${d.id}-titel`}>{d.titel}</h2>
         <p class="muted">{d.text}</p>
-        <dl>
-          <dt>Was dazugehört</dt>
-          <dd>{d.dazu}</dd>
-          <dt>Beste Zeit</dt>
-          <dd>{d.zeit}</dd>
-          {d.preis && <><dt>Richtpreis</dt><dd>{d.preis}</dd></>}
-        </dl>
+        {d.dazu && (
+          <dl>
+            <dt>Was dazugehört</dt>
+            <dd>{d.dazu}</dd>
+            <dt>Beste Zeit</dt>
+            <dd>{d.zeit}</dd>
+            {d.preis && <><dt>Richtpreis</dt><dd>{d.preis}</dd></>}
+          </dl>
+        )}
       </section>
     ))}
     </div>

@@ -94,6 +94,8 @@ Jedes Projekt erscheint automatisch auf der Referenzen-Seite und – wenn es zu 
 - [ ] Alle Platzhalter in `[eckigen Klammern]` ersetzen (Suche nach `[` im Ordner `src/`)
 - [ ] Name und Foto für „Über mich“, Orte im Einsatzgebiet
 - [ ] Impressum und Datenschutz vervollständigen und prüfen lassen (Hoster eintragen!)
+- [ ] Umsatzsteuer-ID von Robin ins Impressum (Abschnitt ist vorbereitet, siehe Kommentar in `src/pages/impressum.astro`)
+- [ ] Instagram und Facebook in `src/data/firma.ts` eintragen, sobald die Konten existieren
 - [x] Beispielprojekt und Beispielbilder löschen, echte Projekte anlegen
 - [ ] Fotos durch hochauflösende Originale ersetzen (`src/assets/fotos/`)
 - [ ] Gartenkalender fachlich prüfen
