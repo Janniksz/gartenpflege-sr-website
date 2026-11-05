@@ -34,4 +34,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ./ # Zielordner auf dem Webspace, ggf. anpassen
+          server-dir: ./httpdocs/ # Website-Ordner bei netcup

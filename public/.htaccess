@@ -1,0 +1,7 @@
+# Eigene Fehlerseite bei falschen Adressen
+ErrorDocument 404 /404.html
+
+# Adresse ohne www dauerhaft auf www weiterleiten (eine einheitliche Adresse für Google)
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^gartenpflege-sr\.de$ [NC]
+RewriteRule ^ https://www.gartenpflege-sr.de%{REQUEST_URI} [R=301,L]
