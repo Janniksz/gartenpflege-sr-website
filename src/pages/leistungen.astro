@@ -114,7 +114,7 @@ const details = [
         <li><h3>Anfrage</h3><p>Rufen Sie an oder schreiben Sie per WhatsApp, was zu tun ist.</p></li>
         <li><h3>Besichtigung</h3><p>Ich schaue mir Ihren Garten kurz vor Ort an.</p></li>
         <li><h3>Preis vorab</h3><p>Sie erfahren den Preis, bevor ich anfange. Ohne Überraschungen.</p></li>
-        <li><h3>Erledigung</h3><p>Ich arbeite zum vereinbarten Termin und hinterlasse alles ordentlich.</p></li>
+        <li><h3>Erledigung</h3><p>Am vereinbarten Termin lege ich los. Sie müssen sich um nichts kümmern.</p></li>
       </ol>
     </div>
   </section>
@@ -127,8 +127,8 @@ const details = [
     </div>
     <div class="faq">
       <details>
-        <summary>Was kostet die Gartenpflege?</summary>
-        <p>Das hängt von Größe und Zustand des Gartens ab. Nach einer kurzen Besichtigung nenne ich Ihnen den Preis vorab und transparent.</p>
+        <summary>In welchen Orten sind Sie unterwegs?</summary>
+        <p>In {firma.orte.slice(0, -1).join(', ')} und {firma.orte[firma.orte.length - 1]}. Ihr Ort ist nicht dabei? Fragen Sie einfach nach.</p>
       </details>
       <details>
         <summary>Nehmen Sie den Grünschnitt mit?</summary>
@@ -139,8 +139,8 @@ const details = [
         <p>Ja, regelmäßige Pflege können Sie gerne anfragen. Wie oft ich komme, stimmen wir gemeinsam ab, passend zu Ihrem Garten und Ihren Wünschen.</p>
       </details>
       <details>
-        <summary>Wie schnell bekomme ich einen Termin?</summary>
-        <p>Melden Sie sich einfach. Bei der Anfrage nenne ich Ihnen den nächsten freien Termin.</p>
+        <summary>Was sollte ich bei der Anfrage angeben?</summary>
+        <p>Schreiben Sie kurz, was zu tun ist und wo der Garten liegt. Fotos per WhatsApp helfen mir, die Arbeit besser einzuschätzen.</p>
       </details>
     </div>
     </div>
@@ -152,10 +152,7 @@ const details = [
   // (unter Kopfzeile und Schnellnavigation, über der Anruf-Leiste) und leuchtet kurz auf.
   const karten = [...document.querySelectorAll<HTMLElement>('.service-detail')];
   const knoepfe = [...document.querySelectorAll<HTMLAnchorElement>('[data-ziel]')];
-  const navListe = document.querySelector<HTMLElement>('.schnellnav-liste');
   const karteVon = (id: string) => karten.find((k) => k.id === id) ?? null;
-  let markiert = '';
-  let gesperrtBis = 0;
 
   const zielPosition = (karte: HTMLElement) => {
     const kopf = document.querySelector('.site-header');
@@ -171,18 +168,6 @@ const details = [
     return r.top + window.scrollY - oben - abstand;
   };
 
-  // Genau einen Knopf markieren und ihn auf dem Handy in die Mitte der Leiste schieben.
-  const markiere = (id: string) => {
-    if (id === markiert) return;
-    markiert = id;
-    knoepfe.forEach((k) => {
-      if (k.dataset.ziel === id) {
-        k.setAttribute('aria-current', 'true');
-        navListe?.scrollTo({ left: k.offsetLeft - (navListe.clientWidth - k.offsetWidth) / 2, behavior: 'smooth' });
-      } else k.removeAttribute('aria-current');
-    });
-  };
-
   const aufleuchten = (karte: HTMLElement) => {
     karte.classList.remove('ist-ziel');
     void karte.offsetWidth; // Animation neu starten
@@ -190,9 +175,7 @@ const details = [
   };
 
   const springe = (karte: HTMLElement, verhalten: ScrollBehavior) => {
-    gesperrtBis = performance.now() + 1200; // währenddessen markiert das Scrollen nichts um
     if (karte instanceof HTMLDetailsElement) karte.open = true; // angesprungene Karte aufklappen
-    markiere(karte.id);
     window.scrollTo({ top: zielPosition(karte), behavior: verhalten });
   };
 
@@ -248,29 +231,4 @@ const details = [
         .catch(() => {}); // abgebrochen durch erneutes Klicken: die neue Animation übernimmt
     });
   });
-
-  // Beim Scrollen die Leistung markieren, die auf Höhe der Bildschirmmitte liegt.
-  // Stehen zwei Karten nebeneinander, bleibt die gewählte markiert, sonst die linke.
-  let geplant = false;
-  const pruefe = () => {
-    geplant = false;
-    if (performance.now() < gesperrtBis || !karten.length) return;
-    const mitte = window.innerHeight / 2;
-    const reihe = karten.filter((k) => {
-      const r = k.getBoundingClientRect();
-      return r.top <= mitte && r.bottom >= mitte;
-    });
-    if (reihe.length) markiere(reihe.some((k) => k.id === markiert) ? markiert : reihe[0].id);
-    else if (mitte < karten[0].getBoundingClientRect().top || mitte > karten[karten.length - 1].getBoundingClientRect().bottom) markiere('');
-  };
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (!geplant) {
-        geplant = true;
-        requestAnimationFrame(pruefe);
-      }
-    },
-    { passive: true },
-  );
 </script>

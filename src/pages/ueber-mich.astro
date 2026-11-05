@@ -11,15 +11,16 @@ import foto from '../assets/fotos/robin-stocker.jpg';
     <header class="page-head">
       <p class="eyebrow">{firma.name}</p>
       <h1 class="h1">Über mich.</h1>
-      <p class="lead text-max">Bei {firma.name} haben Sie mit mir einen festen Ansprechpartner für Ihren Garten.</p>
     </header>
 
     <section class="about" aria-labelledby="person-titel">
       <Picture class="about-foto" src={foto} formats={['avif', 'webp']} alt={`${firma.inhaber} mit Arbeitshandschuhen im Garten`} widths={[360, 720]} sizes="(max-width: 700px) 100vw, 360px" />
       <div class="stack">
         <h2 class="h3" id="person-titel">Ich bin {firma.inhaber}.</h2>
-        <p>Ich wohne in Soltau und kümmere mich mit Leidenschaft um Gärten in der Region. Ob Rasen, Hecke oder Beet: Ich packe gerne mit an.</p>
-        <p>Bei der Arbeit sind mir zwei Dinge besonders wichtig: Sauberkeit und Ihre Zufriedenheit. Ich hinterlasse Ihren Garten so ordentlich, wie ich ihn mir selbst wünschen würde. Und ich bin erst fertig, wenn Sie mit dem Ergebnis zufrieden sind.</p>
+        <p>Für Gärten begeistere ich mich, seit ich denken kann. Als ich älter wurde, habe ich angefangen, mich um unseren eigenen Garten zu kümmern. Rasen mähen, Hecken schneiden, Beete pflegen: Ich habe schnell gemerkt, wie viel Freude es macht, am Ende des Tages zu sehen, was man geschafft hat.</p>
+        <p>Genau diese Freude bringe ich heute in Ihren Garten. Mit {firma.name} kümmere ich mich in {firma.gebiet} um Gärten, und zwar mit derselben Sorgfalt wie um den eigenen.</p>
+        <p>Deshalb sind mir zwei Dinge besonders wichtig: Sauberkeit und Ihre Zufriedenheit. Ich hinterlasse Ihren Garten so ordentlich, wie ich ihn mir selbst wünschen würde. Und ich bin erst fertig, wenn Sie mit dem Ergebnis zufrieden sind.</p>
+        <p>Bei {firma.name} haben Sie mit mir einen festen Ansprechpartner für Ihren Garten.</p>
       </div>
     </section>
   </div>

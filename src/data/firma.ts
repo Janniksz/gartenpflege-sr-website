@@ -1,7 +1,7 @@
 // Zentrale Firmendaten. Hier ändern, dann stimmt es überall auf der Website.
 export const firma = {
   name: 'Gartenpflege SR',
-  claim: 'Natürlich. Zuverlässig. Regional.',
+  claim: 'Regional. Fair. Persönlich.',
   gebiet: 'Soltau & Umgebung',
   telefonAnzeige: '0151 70022945',
   telefonLink: 'tel:+4915170022945',
