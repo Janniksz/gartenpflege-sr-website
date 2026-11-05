@@ -236,18 +236,33 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .schnellnav a[aria-current] svg { color: var(--sprout); }
 .service-detail { scroll-margin-top: 160px; }
 /* Leistungen als Karten, zwei nebeneinander; auf dem Handy untereinander. */
-.service-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); padding-bottom: var(--space-16); }
+.service-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); align-items: start; padding-bottom: var(--space-16); }
 @media (max-width: 760px) { .service-details { grid-template-columns: 1fr; gap: var(--space-4); } }
 .service-detail { display: flex; flex-direction: column; gap: var(--space-3); background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-8); scroll-margin-top: var(--space-24); }
 @media (max-width: 760px) { .service-detail { padding: var(--space-6); } }
 .service-detail { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.service-detail:hover { border-color: var(--moss); box-shadow: var(--shadow-card); }
+details.service-detail:hover { border-color: var(--moss); box-shadow: var(--shadow-card); }
+/* Geschlossen: Titel, Kurztext, „Mehr erfahren“. Die ganze Karte ist anklickbar. */
+details.service-detail { gap: 0; }
+.service-detail summary { display: flex; flex-direction: column; gap: var(--space-3); cursor: pointer; list-style: none; }
+.service-detail summary::-webkit-details-marker { display: none; }
+.service-vorschau { display: block; min-height: 4.8em; color: var(--ink-muted); }
+@media (max-width: 760px) { .service-vorschau { min-height: 0; } }
+.service-mehr { display: inline-flex; align-self: flex-start; align-items: center; gap: var(--space-1); min-height: 44px; color: var(--moss); font-weight: 600; }
+.service-mehr svg { width: 18px; height: 18px; transition: transform 0.2s ease; }
+.service-mehr-auf { display: none; }
+details[open]:not(.schliesst) .service-mehr-zu { display: none; }
+details[open]:not(.schliesst) .service-mehr-auf { display: inline; }
+details[open]:not(.schliesst) .service-mehr svg { transform: rotate(180deg); }
+@keyframes aufklappen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+details.service-detail[open] dl { animation: aufklappen 0.25s ease-out; }
 /* Angesprungene Karte leuchtet kurz auf und wird dann wieder normal. */
 @keyframes aufleuchten { 0%, 50% { border-color: var(--moss); box-shadow: 0 0 0 2px var(--moss), var(--shadow-card); } 100% { border-color: var(--line); box-shadow: none; } }
 .service-detail:target, .service-detail.ist-ziel { animation: aufleuchten 2.4s ease-out; }
-.service-detail dl { display: grid; gap: var(--space-2); margin: auto 0 0; padding-top: var(--space-4); border-top: 1px solid var(--line); }
-.service-detail dt { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--moss); }
-.service-detail dd { margin: 0 0 var(--space-2); }
+.service-detail dl { display: grid; gap: var(--space-2); margin: var(--space-3) 0 0; padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.service-detail dt { font-size: 15px; line-height: 22px; font-weight: 700; color: var(--moss); }
+.service-detail dd { margin: 0 0 var(--space-3); color: var(--ink); }
+.service-detail dd:last-child { margin-bottom: 0; }
 .steps { list-style: none; padding: 0; counter-reset: step; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: var(--space-8); }
 .steps li { position: relative; counter-increment: step; display: flex; flex-direction: column; gap: var(--space-2); }
 @media (min-width: 960px) { .steps li:not(:last-child)::after { content: ''; position: absolute; top: 19px; left: 52px; right: calc(-1 * var(--space-8) + 12px); height: 2px; border-radius: var(--radius-full); background: var(--sprout); } }
@@ -464,6 +479,6 @@ a, button, summary { -webkit-tap-highlight-color: transparent; }
   .kachel, .kachel-pfeil, .ba-griff, .logo img, .site-header, .site-header .container, .faq summary::after { transition: none; }
   .kachel:hover, .kachel:hover .kachel-pfeil { transform: none; }
   .btn:active, .kachel:active, .wegweiser a:active, .kal-leiste a:active, .schnellnav a:active, .karussell-pfeil:active, .menue-knopf:active, .ba-gross:active, .social a:active, .filter button:active { transform: none; }
-  .ba.ba-hinweis, .kal-reiter .kal-monat.ist-gewaehlt, .service-detail:target, .service-detail.ist-ziel, .project:target { animation: none; }
+  .ba.ba-hinweis, .kal-reiter .kal-monat.ist-gewaehlt, .service-detail:target, .service-detail.ist-ziel, .project:target, details.service-detail[open] dl { animation: none; }
   .faq details::details-content { transition: none; }
 }

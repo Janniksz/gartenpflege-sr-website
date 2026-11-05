@@ -74,10 +74,17 @@ const details = [
 
     <div class="service-details">
     {details.map((d) => (
-      <section class="service-detail" id={d.id} aria-labelledby={`${d.id}-titel`}>
-        <h2 class="h4" id={`${d.id}-titel`}>{d.titel}</h2>
-        <p class="muted">{d.text}</p>
-        {d.dazu && (
+      d.dazu ? (
+        <details class="service-detail" id={d.id}>
+          <summary>
+            <h2 class="h4">{d.titel}</h2>
+            <span class="service-vorschau">{d.text}</span>
+            <span class="service-mehr">
+              <span class="service-mehr-zu">Mehr erfahren</span>
+              <span class="service-mehr-auf">Weniger anzeigen</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+            </span>
+          </summary>
           <dl>
             <dt>Was dazugehört</dt>
             <dd>{d.dazu}</dd>
@@ -85,8 +92,14 @@ const details = [
             <dd>{d.zeit}</dd>
             {d.preis && <><dt>Richtpreis</dt><dd>{d.preis}</dd></>}
           </dl>
-        )}
-      </section>
+        </details>
+      ) : (
+        <section class="service-detail service-detail--einfach" id={d.id} aria-labelledby={`${d.id}-titel`}>
+          <h2 class="h4" id={`${d.id}-titel`}>{d.titel}</h2>
+          <p class="service-vorschau">{d.text}</p>
+          <a class="service-mehr" href="#kontakt">Unverbindlich anfragen</a>
+        </section>
+      )
     ))}
     </div>
   </div>
@@ -178,6 +191,7 @@ const details = [
 
   const springe = (karte: HTMLElement, verhalten: ScrollBehavior) => {
     gesperrtBis = performance.now() + 1200; // währenddessen markiert das Scrollen nichts um
+    if (karte instanceof HTMLDetailsElement) karte.open = true; // angesprungene Karte aufklappen
     markiere(karte.id);
     window.scrollTo({ top: zielPosition(karte), behavior: verhalten });
   };
@@ -206,6 +220,33 @@ const details = [
       springe(karte, 'smooth');
       aufleuchten(karte);
     }
+  });
+
+  // Sanftes Auf- und Zuklappen: Die Höhe der Karte wird animiert (bei „Bewegung reduzieren“ nicht).
+  const sanft = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLDetailsElement>('details.service-detail').forEach((karte) => {
+    let animation: Animation | null = null;
+    karte.querySelector('summary')?.addEventListener('click', (e) => {
+      if (!sanft) return;
+      e.preventDefault();
+      const oeffnen = !karte.open || karte.classList.contains('schliesst');
+      const von = karte.getBoundingClientRect().height;
+      animation?.cancel();
+      // Zielhöhe messen: kurz in den Endzustand schalten.
+      karte.open = oeffnen;
+      const nach = karte.getBoundingClientRect().height;
+      karte.open = true;
+      karte.classList.toggle('schliesst', !oeffnen);
+      karte.style.overflow = 'hidden';
+      animation = karte.animate({ height: [`${von}px`, `${nach}px`] }, { duration: 300, easing: 'cubic-bezier(0.22, 0.7, 0.2, 1)' });
+      animation.finished
+        .then(() => {
+          karte.open = oeffnen;
+          karte.classList.remove('schliesst');
+          karte.style.overflow = '';
+        })
+        .catch(() => {}); // abgebrochen durch erneutes Klicken: die neue Animation übernimmt
+    });
   });
 
   // Beim Scrollen die Leistung markieren, die auf Höhe der Bildschirmmitte liegt.
