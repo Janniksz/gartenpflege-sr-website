@@ -38,7 +38,7 @@ Statische Website für Gartenpflege SR (Gartenpflege in Soltau & Umgebung), geba
 
 - Ich-Form, Sie-Ansprache. Kurze Sätze, Überschriften enden mit Punkt („Gepflegt bis ins Detail."). Keine Ausrufezeichen, keine Superlative.
 - Leistungen immer in dieser Reihenfolge: Rasenmähen · Hecken- und Formschnitt · Laubentfernung · Entsorgung von Grünschnitt · Pflege von Sträuchern und Beeten · Weitere Gartenarbeiten auf Anfrage.
-- Versprechen: Zuverlässig (Termine wie vereinbart) · Fair (Preis vorab transparent) · Gründlich (Garten sauber hinterlassen).
+- Versprechen: Regional (Soltau, kurze Wege) · Fair (Preis vorab bekannt) · Persönlich (immer direkt mit Robin, Vereinbarungen gelten).
 - **Nichts erfinden:** keine Kundenstimmen, Preise, Zahlen, Jahre Erfahrung, Qualifikationen oder Siegel. Fehlt eine Angabe, sichtbaren Platzhalter in `[eckigen Klammern]` setzen und mich darauf hinweisen.
 
 ## Datenschutz (DSGVO)
