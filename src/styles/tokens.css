@@ -5,23 +5,23 @@
 @font-face { font-family: "DM Sans"; src: url("/fonts/dm-sans-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
 @font-face { font-family: "DM Sans"; src: url("/fonts/dm-sans-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
 :root {
-  --surface: #F5F1E7;
-  --surface-raised: #FBF9F3;
-  --surface-sunken: #ECE6D8;
-  --line: #D9D2C2;
+  --surface: #FAFAF7;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #EEF1EA;
+  --line: #E1E5DC;
   --ink: #1C2A22;
   --ink-muted: #4A5750;
   --forest: #1F3B2C;
   --forest-hover: #2B4A36;
-  --on-forest: #F5F1E7;
+  --on-forest: #FAFAF7;
   --on-forest-muted: #C4D3B8;
-  --moss: #3F6128;
+  --moss: #4A7324;
   --leaf: #5B7F3A;
-  --sprout: #B8CF94;
-  --sprout-soft: #E1EAD2;
+  --sprout: #CFE3A8;
+  --sprout-soft: #E6EEDA;
   --link: var(--moss);
   --shadow-card: 0 1px 2px rgba(28, 42, 34, 0.06), 0 8px 24px rgba(28, 42, 34, 0.08);
-  --focus-ring: 0 0 0 2px #F5F1E7, 0 0 0 4px #3F6128;
+  --focus-ring: 0 0 0 2px #FAFAF7, 0 0 0 4px #4A7324;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
